@@ -1,0 +1,12 @@
+4-5 adatbázistábla + CRUD-műveletek
+autentikáció
+email-küldés
+védelmek: autók listáját mindenki
+bérelni csak egy felhasználó tudjon (bejelentkezés)
+törölni csak adminoknak
+le kell kezelni a rossz paraméterezést
+NotFoundException->not found oldal
+felhasználók -> registration/loginform in springboot - ez is adatbázisban lenne
+user - szerepkör 
+
+Autó - Bérlő - Telephely

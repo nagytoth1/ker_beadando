@@ -1,0 +1,33 @@
+Táblák:
+
+user
+id, name, passwd, email
+
+computer
+id, ram_id (F), ram_quantity, processor_id (F), gpu_id (F), psu_id (F), storage_id (F) opsystem_id (F)
+
+ram
+id, name, type, speed
+
+cpu
+id, name, numOfCores, cache, clockrate
+
+gpu
+id, name, clockrate
+
+psu
+id, name, type, performance
+
+opsystem
+id, name
+
+storage
+id, name, type, capacity, speed
+
+1:N - egy ram, cpu, gpu, psu, opsystem több számítógéphez tartozhat -> a computer táblában kellenek foreign key-ek ezekre
+N:N - egy gép többféle storage lehet, 
+	viszont egy storage több gépben is lehet
+	
+Ötlet: Amikor vesz egy számítógépet, küld neki egy visszaigazoló email-t
+
+1 ram egyszerre csak egy géphez tartozik
