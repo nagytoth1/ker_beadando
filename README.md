@@ -1,1 +1,3 @@
 # ker_beadando
+## DB-terv
+![dbterv](//www.plantuml.com/plantuml/png/TP7HQiCm34NV_HMcJrjP_w4msEi-OGX5JStYM9DiHcdwxvjDFDILF9bpSs-iAnyrW-GI9qTp3ldYYv9StJuCBzxjPuXKJmRLxwPGX32vc-ls7QR89PFiFAYly1SMY1zXy4zlpvs-2hHKPPQ4f9h4U4OkXbWjQKu28wtAhv1OBvgfts5c4eWF3VA5swbCD5HlDoCN_-2UItm_lIOXhOI0voRZbF1J89EvREHYuvi-rh8v59ESaaIOqIPwGHkptzUDRFuLWG7hjcrjWUYNvN1OhksnNArlUVp7hFVSXxeJrqdypMZdC93783YHEz8yb3Zz0000 "Adatbázis terv")
