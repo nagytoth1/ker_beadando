@@ -15,7 +15,7 @@ public class User {
     @Column(name = "password", nullable = false)
     private String password;
 
-    @JoinColumn(name="role_id", nullable=false)
+    @ManyToOne(targetEntity=Role.class, fetch=FetchType.EAGER)
     private Role role;
 
     public User(String username, String password, Role role) {

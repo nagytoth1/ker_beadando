@@ -7,6 +7,7 @@
 <body>
 <h1>Login</h1>
 <form name='loginform' action="login" method="POST">
+    <h3 th:text="${errMessage}" style="color:red;"></h3>
     <table>
         <tr>
             <td>User:</td>
@@ -17,7 +18,7 @@
             <td><input type='password' name='password' /></td>
         </tr>
         <tr>
-            <td><input name="submit" type="submit" value="submit" /></td>
+            <td><input name="submit" type="submit" value="Bejelentkezés"/></td>
         </tr>
     </table>
 </form>

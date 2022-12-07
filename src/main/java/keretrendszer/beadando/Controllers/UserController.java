@@ -24,8 +24,13 @@ public class UserController {
         return "register";
     }
     @PostMapping("/login")
-    public String validateLogin(@ModelAttribute User user){
-        if()
-        return "redirect:/";
+    public String validateLogin(@ModelAttribute User user, Model m){
+        if(user.getUsername().equals("admin") && user.getPassword().equals("admin")){
+            m.addAttribute("title", "Üdvözlő oldal");
+            return "welcome";
+        }
+        m.addAttribute("title", "Hiba bejelentkezéskor");
+        m.addAttribute("errMessage", "Invalid login credentials!");
+        return "login";
     }
 }
