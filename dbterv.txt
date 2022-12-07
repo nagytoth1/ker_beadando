@@ -10,10 +10,10 @@ ram
 id, name, type, speed
 
 cpu
-id, name, numOfCores, cache, clockrate
+id, name, cores, cache, clockrate
 
 gpu
-id, name, clockrate
+id, name, clockrate, coolant
 
 psu
 id, name, type, performance

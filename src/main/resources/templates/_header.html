@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<body>
+  <header layout:fragment="header">
+    <div class="collapse bg-dark" id="navbarHeader">
+      <div class="row">
+        <div class="col-sm-8 col-md-7 py-4">
+          <h4 class="text-white">Rólunk</h4>
+          <p class="text-muted">...leírás...</p>
+        </div>
+        <div class="col-sm-4 offset-md-1 py-4">
+          <h4 class="text-white">Elérhetőségek</h4>
+          <ul class="list-unstyled">
+            <li class="text-white">Telefonszámunk: +3630303030</li>
+            <li><a href="#" class="text-white">Facebook-oldalunk</a></li>
+            <li><a href="#" class="text-white">Küldjön e-mail-t!</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+<div class="navbar navbar-dark bg-dark shadow navbar-expand-lg">
+  <img class="me-3 mx-3" src="@{pc.svg}" alt="Számítógép" width="50" height="50"
+       fill="none" stroke="currentColor" stroke-linecap="round"
+       stroke-linejoin="round" stroke-width="2" aria-hidden="true"/>
+  <a class="text-light text-decoration-none" th:href="@{/home}">
+    <h3 style="color: #fff8e5;" class="">Számítógépes Webáruház</h3>
+  </a>
+  <div class="d-flex justify-content-center input-group container mb-2 mt-2" style="width: 35vw;">
+    <form class="form-inline my-2 my-lg-0" method="GET" th:action="@{/search}">
+      <input type="text" id="search_text" name="search_text" maxlength="30"
+             class="border-2 border-secondary rounded-pill px-4 py-2"
+             aria-label="Search"
+             aria-describedby="search-addon"
+             placeholder="Termék keresése"
+      />
+      <button type="submit" class="header-controls btn btn-md p-2 ms-3 rounded">Keresés</button>
+    </form>
+  </div>
+  <!-- csak ha nincs bejelentkezve, akkor kéne megjelennie -->
+  <span th:if="${userLoggedIn == null}">
+    <a href="@{/login}"
+       class="header-controls btn btn-md px-3 py-1 my-2">Bejelentkezés</a>
+    <a href="@{/register}"
+       class="header-controls btn btn-md ms-3 px-3 py-1 my-2">Regisztráció</a>
+    <button class="navbar-toggler ms-3 me-3" type="button" data-bs-toggle="collapse" data-bs-target="#navbarHeader" aria-controls="navbarHeader" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+  </span>
+  <div class="nav-item dropdown" th:unless="${userLoggedIn == null}">
+    <a href="" class="nav-link dropdown-toggle header-controls" style="text-decoration: none;" id="navbarDropdown" role="button"
+       data-bs-toggle="dropdown" aria-expanded="false">
+                                                                                  <!-- th:text="${users.location!=null}?${users.location.districtName}:''"-->
+      <img th:src="@{/assets/profile.png}" height="30" width="30" alt="" class="mx-2 rounded-circle rounded-sm" th:text="${userLoggedIn != null} ? {user.name}:'Felhasználó'"/></a>
+    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+      <li><a th:href="@{/profile}" class="dropdown-item">Profilom</a></li>
+      <li>
+        <form th:action="@{/logout}" method="GET">
+          <input class="dropdown-item" type="submit" value="Kijelentkezés" name="logout"/>
+        </form>
+      </li>
+    </ul>
+  </div>
+</div>
+</header>
+</body>
+</html>

@@ -12,7 +12,7 @@ public class Psu {
     @Column(nullable = false, unique = true)
     private String name;
     @Column(nullable = false, columnDefinition = "varchar(100) default 'moduláris'")
-    private String product_type;
+    private String type;
     @Column(nullable = false, columnDefinition = "smallint default 500")
     private short performance;
 }

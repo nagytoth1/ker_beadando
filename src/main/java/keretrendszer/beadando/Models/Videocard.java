@@ -16,5 +16,5 @@ public class Videocard {
     private float clockrate;
 
     @Column(nullable = false, columnDefinition = "varchar(50) default 'vízhűtés'")
-    private String coolant_type;
+    private String coolant;
 }

@@ -6,16 +6,16 @@
 </head>
 <body>
 <h1>Login</h1>
-<form name='loginform' action="login" method="POST">
+<form name='loginform' action="login" method="POST" th:object="${user}">
     <h3 th:text="${errMessage}" style="color:red;"></h3>
     <table>
         <tr>
-            <td>User:</td>
-            <td><input type='text' name='username' value=''></td>
+            <td>Felhasználóneved:</td>
+            <td><input type="text" name="username" id="username" value="kiskutyus73" th:field="*{username}"></td>
         </tr>
         <tr>
-            <td>Password:</td>
-            <td><input type='password' name='password' /></td>
+            <td>Jelszavad:</td>
+            <td><input type="password" name="password" id="password" th:field="*{password}"/></td>
         </tr>
         <tr>
             <td><input name="submit" type="submit" value="Bejelentkezés"/></td>

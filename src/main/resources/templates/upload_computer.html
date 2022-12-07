@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="hu"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title th:text="${title}">Oldal neve</title>
+</head>
+<body>
+<h1>Login</h1>
+<form name='createcomp' th:action="@{/create}" method="POST" enctype="multipart/form-data">
+    <div class="row">
+        <div layout:fragment="upload_card"></div>
+    </div>
+    <div class="d-grid">
+      <button class="btn mainBtn btn-lg my-5 mx-auto px-5 w-25 border border-dark rounded-1" type="submit">Feltöltés</button>
+    </div>
+</form>
+</body>
+</html>

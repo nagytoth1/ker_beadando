@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="HU"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<body>
+<div layout:fragment="upload_card">
+    <div class="col-lg-6 col-md-8 mx-auto">
+        <div class="card mb-3 pb-5">
+            <div class="card-header">
+                <h2 class="mb-3 ms-3 mt-2">Termék felvétele</h2>
+            </div>
+            <div class="card-body">
+                <form action="" method="POST">
+                    <!-- csrf-token volt itt-->
+                    <div class="mb-3 ms-2">
+                        <label for="computer_name">Számítógép neve:</label>
+                        <input class="form-control" type="text" id="computer_name" name="computer_name" value="Alma PC...">
+                    </div>
+                    <div class="mb-3 ms-2">
+                        <label for="motherboard">Alaplap:</label>
+                        <input class="form-control" type="text" id="motherboard" name="motherboard" value="...alaplap...">
+                    </div>
+                    <div class="mb-2 ms-2">
+                        <label for="ram">Memória:</label>
+                        <select class="form-control" id="ram" name="ram">
+                            <option value="">Kérlek, válassz a lehetőségek közül...</option>
+                            <option th:each="ram: ${rams}" th:value="${ram.id}"
+                                    th:text="${ram.type} ${ram.size} GB ${ram.speed} MHz">
+                            </option>
+                        </select>
+                    </div>
+                    <div class="row gx-1 mt-0">
+                        <div class="col-3 p-3">
+                            <label for="quantity">Darabszám:</label>
+                        </div>
+                        <div class="col-5 my-2">
+                            <input type="number" placeholder="ramok száma"
+                                   class="px-2 py-2 border-2" id="quantity" name="quantity"
+                                   min="0" max="8" step="2"
+                                   value="2"/>
+                        </div>
+                    </div>
+                    <div class="mb-3 ms-2">
+                        <label for="processor">Processzor:</label>
+                        <select class="form-control" name="processor" id="processor">
+                            <option value="">Kérlek, válassz a lehetőségek közül...</option>
+                            <option th:each="proc: ${processors}"
+                                    th:value="${proc.id}"
+                                    th:text="${proc.name} ${proc.cores}">$processor->numOfCores }} magos {{ $processor->clockrate }} GHz</option>
+                        </select>
+                        @if ($errors->has('processor'))
+                        <p class="invalid-feedback"> {{ $errors->first('processor') }} </p>
+                        @endif
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

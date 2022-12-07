@@ -1,5 +1,6 @@
 package keretrendszer.beadando.Controllers;
 
+import keretrendszer.beadando.Models.Role;
 import keretrendszer.beadando.Models.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,6 +12,12 @@ import javax.naming.AuthenticationException;
 
 @Controller
 public class UserController {
+    @GetMapping("/")
+    public String showMainPage(Model model){
+        model.addAttribute("title", "Főoldal");
+        model.addAttribute("user", null);
+        return "main";
+    }
     @GetMapping("/login")
     public String showLoginForm(Model model){
         model.addAttribute("title", "Bejelentkezés");
@@ -28,6 +35,10 @@ public class UserController {
         if(user.getUsername().equals("admin") && user.getPassword().equals("admin")){
             m.addAttribute("title", "Üdvözlő oldal");
             return "welcome";
+        }
+        if(user.getUsername().equals("stacker") && user.getPassword().equals("stacker")){
+            m.addAttribute("title", "feltöltés");
+            return "upload_computer";
         }
         m.addAttribute("title", "Hiba bejelentkezéskor");
         m.addAttribute("errMessage", "Invalid login credentials!");

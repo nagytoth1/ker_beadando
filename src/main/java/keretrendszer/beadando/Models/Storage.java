@@ -10,7 +10,7 @@ public class Storage {
     private long id;
 
     @Column(nullable = false, length = 40)
-    private String port_type;
+    private String port;
     @Column(nullable = false)
     private int capacity;
     @Column(nullable = false, scale = 10, precision = 2, columnDefinition = "float default 3.5")
@@ -18,5 +18,5 @@ public class Storage {
     @Column(nullable = false, columnDefinition = "integer default 5000")
     private int rpm;
     @Column(nullable = false, columnDefinition = "smallint default 32")
-    private short cacheInMB;
+    private short cachemb;
 }

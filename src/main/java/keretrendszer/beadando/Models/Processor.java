@@ -12,9 +12,9 @@ public class Processor {
     @Column(nullable = false, length = 100)
     private String name;
     @Column(nullable = false, columnDefinition = "tinyint default 4")
-    private byte numOfCores;
+    private byte cores;
     @Column(nullable = false, columnDefinition = "tinyint default 12")
-    private byte cacheInMB;
+    private byte cachemb;
     @Column(nullable = false, scale = 10, precision = 4, columnDefinition = "float default 3.20")
     private float clockrate;
 }

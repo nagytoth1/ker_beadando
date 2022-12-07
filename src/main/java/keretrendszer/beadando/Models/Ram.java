@@ -10,7 +10,7 @@ public class Ram {
     private long id;
 
     @Column(length = 10, nullable = false)
-    private String product_type;
+    private String type;
     @Column(nullable = false, columnDefinition = "integer default 2600")
     private int speed;
     @Column(nullable = false, columnDefinition = "tinyint default 4")
