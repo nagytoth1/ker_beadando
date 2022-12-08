@@ -1,0 +1,23 @@
+ <nav class="navbar navbar-expand-lg navbar-dark bg-dark" th:fragment="navbar">
+     <div class="navbar-brand">
+         <img class="mx-3" th:src="@{assets/pc.svg}" alt="Számítógép" width="50" height="50"
+              fill="none" stroke="currentColor" stroke-linecap="round"
+              stroke-linejoin="round" stroke-width="2" aria-hidden="true"/>
+         <a class="text-light text-decoration-none" href="/">
+             <h3 style="color: #fff8e5;" class="">Számítógépes Webáruház</h3>
+         </a>
+     </div>
+     <ul class="nav navbar-right mx-3" th:if="${user==null}">
+         <li><a th:href="@{'/login'}" class="btn btn-warning mx-3 font-weight-bold text-lg-left">Bejelentkezés</a></li>
+         <li><a th:href="@{'/register'}" class="btn btn-success mx-3 font-weight-bold text-lg-left">Regisztráció
+         </a></li>
+     </ul>
+     <ul class="nav navbar-nav mx-3" th:unless="${user==null}">
+         <li><a th:href="@{/profile}" class="dropdown-item">Profilom</a></li>
+         <li>
+             <form th:action="@{/logout}" method="GET">
+                 <input class="dropdown-item" type="submit" value="Kijelentkezés" name="logout"/>
+             </form>
+         </li>
+     </ul>
+ </nav>

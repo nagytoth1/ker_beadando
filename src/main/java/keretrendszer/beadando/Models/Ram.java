@@ -6,9 +6,11 @@ import javax.persistence.*;
 @Table(name = "rams")
 public class Ram {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    @Column(length = 200, nullable = false)
+    private String name;
     @Column(length = 10, nullable = false)
     private String type;
     @Column(nullable = false, columnDefinition = "integer default 2600")

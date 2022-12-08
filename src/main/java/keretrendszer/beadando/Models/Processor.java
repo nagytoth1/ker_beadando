@@ -6,7 +6,7 @@ import javax.persistence.*;
 @Table(name = "cpus")
 public class Processor {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     @Column(nullable = false, length = 100)

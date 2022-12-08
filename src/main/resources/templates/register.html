@@ -1,22 +1,37 @@
 <!DOCTYPE html>
-<html lang="hu">
+<html lang="hu" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Oldal neve</title>
+    <meta charset="UTF-8">
+    <title th:text="${title}">Oldal neve</title>
 </head>
 <body>
 <h1>Regisztráció</h1>
-<form name='register' action="register" method='POST'>
+<form th:action="@{/register}" th:object="${user}" method="POST">
+    <h3 th:text="${errMsg}" style="color:red;"></h3>
     <table>
         <tr>
-            <td>User:</td>
-            <td><input type='text' name='username' value=''></td>
+            <td>Felhasználóneved:</td>
+            <td><input type="text" name="username" id="username" value="kiskutyus73" th:field="*{username}"></td>
         </tr>
         <tr>
-            <td>Password:</td>
-            <td><input type='password' name='password' /></td>
+            <td>Jelszavad:</td>
+            <td><input type="password" name="password" id="password" th:field="*{password}"/></td>
         </tr>
         <tr>
-            <td><input name="submit" type="submit" value="submit" /></td>
+            <td>Jogosultságod:</td>
+            <td>
+                <select th:field="*{role}" class="form-control" id="role" name="role">
+                    <option value="">szerepkörök</option>
+                    <option
+                            th:each="r: ${roles}"
+                            th:value="${r.id}"
+                            th:text="${r.name}">
+                    </option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td><input name="submit" type="submit" value="Regisztráció"/></td>
         </tr>
     </table>
 </form>

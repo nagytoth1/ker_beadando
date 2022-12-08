@@ -5,9 +5,10 @@
     <title th:text="${title}">Oldal neve</title>
 </head>
 <body>
-<h1>Login</h1>
+<h1>Bejelentkezés</h1>
 <form name='loginform' action="login" method="POST" th:object="${user}">
-    <h3 th:text="${errMessage}" style="color:red;"></h3>
+    <h3 th:text="${failMsg}" style="color:red;"></h3>
+    <h3 th:text="${succMsg}" style="color:green;"></h3>
     <table>
         <tr>
             <td>Felhasználóneved:</td>

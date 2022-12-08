@@ -8,7 +8,12 @@ import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfi
 public class Program {
 
 	public static void main(String[] args) {
-		SpringApplication.run(Program.class, args);
+
+		try{
+			SpringApplication.run(Program.class, args);
+		}catch(Exception exc){
+			System.out.println("Hiba történt: " + exc.getLocalizedMessage());
+		}
 	}
 
 }
