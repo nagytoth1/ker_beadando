@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Profilom</title>
+</head>
+<body>
+<div class="card mx-auto" style="width: 50rem;">
+  <div class="card-body mx-auto">
+    <h3 class="text-left mb-3">Profilom</h3>
+    <table style="width: 50vw;">
+      <tbody>
+      <tr>
+        <td>Felhasználónév:</td>
+        <td th:text="${user.username}"></td>
+        <td class="text-center">
+          <form th:object="${user}" th:action="@{/profile/modifyName}" method="GET">
+            <label for="username" class="d-inline" style="font-size: 18px;">Új felhasználónév:</label>
+            <input th:field="*{username}" type="text" name="username" id="username" class="d-inline mb-2 form-control"
+                   minlength="4" maxlength="40" style="width: min-content; text-align:center; margin: auto;">
+            <input type="submit" class="btn btn-success mb-3 p-2" value="Felhasználónevem megváltoztatása"/>
+          </form>
+        </td>
+      </tr>
+      <tr>
+        <td>E-mail cím:</td>
+        <td th:text="${user.email}"></td>
+        <td class="text-center">
+          <form th:object="${user}" th:action="@{/profile/modifyMail}" method="GET">
+            <label for="email" class="d-inline" style="font-size: 18px;">{{__('Új e-mail cím:')}}</label>
+            <input th:field="*{email}" type="text" id="email" name="email" class="d-inline mb-3 form-control"
+                   minlength="6" maxlength="70" style="width: min-content; text-align:center; margin: auto;">
+            <input type="submit" class="btn btn-success mb-3 p-2" value="E-mail címem megváltoztatása"/>
+          </form>
+      </tr>
+      <tr>
+        <td class="text-center">
+          <form th:object="${user}" th:action="@{/profile/delete}" method="GET">
+            <input type="submit" class="btn btn-danger p-1" value="Fiókom törlése" onclick="confirm('Biztosan le szeretnéd tiltani a saját fiókodat?')"/>
+          </form>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+    <form th:object="${user}" th:action="@{/profile/modifyPass}" method="POST" class="justify-center mt-3 ms-3">
+      <input th:field="*{password}" type="password" name="password" id="password"
+             class="form-control d-inline me-2" style="width: min-content;"
+             placeholder="Új jelszó">
+      <input type="submit" class="btn btn-warning d-inline font-weight-bold" value="Jelszavam megváltoztatása"</button>>
+    </form>
+  </div>
+</div>
+</body>
+</html>

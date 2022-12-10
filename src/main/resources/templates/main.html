@@ -13,8 +13,8 @@
 <body>
     <nav th:replace="fragments/_navbar :: navbar"></nav>
     <main>
-        <h2>Ez már kemény </h2>
-        <h3 th:text="${msg}" style="color:red;"></h3>
+        <h3 th:text="${succMsg}" style="color:green;"></h3>
+        <h3 th:text="${errMsg}" style="color:red;"></h3>
         <div layout:fragment="content"></div> <!-- ez a változó content rész -->
     </main>
 </body>

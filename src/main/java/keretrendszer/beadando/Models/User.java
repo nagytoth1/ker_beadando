@@ -1,16 +1,23 @@
 package keretrendszer.beadando.Models;
 
+import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+
 import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
 @Table(name = "users")
+@EntityScan
+@EnableJpaRepositories
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(name = "username", nullable = false, unique = true)
+    @Column(name = "email", nullable = false) //unique
+    private String email;
+    @Column(name = "username", nullable = false) //unique
     private String username;
     @Column(name = "password", nullable = false)
     private String password;
@@ -18,9 +25,10 @@ public class User {
     @ManyToOne(targetEntity=Role.class, fetch=FetchType.EAGER)
     private Role role;
 
-    public User(String username, String password, Role role) {
+    public User(String username, String password, String email, Role role) {
         this.username = username;
         this.password = password;
+        this.email = email;
         this.role = role;
     }
     public User(){}
@@ -53,6 +61,14 @@ public class User {
         this.role = role;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -65,5 +81,9 @@ public class User {
     @Override
     public int hashCode() {
         return Objects.hash(username, password);
+    }
+
+    public User getShallowCopy(){
+        return new User(this.username, this.password, this.email, this.role);
     }
 }

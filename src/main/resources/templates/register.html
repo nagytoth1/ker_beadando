@@ -7,11 +7,15 @@
 <body>
 <h1>Regisztráció</h1>
 <form th:action="@{/register}" th:object="${user}" method="POST">
-    <h3 th:text="${errMsg}" style="color:red;"></h3>
+    <h3 th:text="${failMsg}" style="color:red;"></h3>
     <table>
         <tr>
+            <td>E-mail címed:</td>
+            <td><input type="text" name="email" id="email" placeholder="kiskutyus73@test.com" th:field="*{email}"></td>
+        </tr>
+        <tr>
             <td>Felhasználóneved:</td>
-            <td><input type="text" name="username" id="username" value="kiskutyus73" th:field="*{username}"></td>
+            <td><input type="text" name="username" id="username" placeholder="kiskutyus73" th:field="*{username}"></td>
         </tr>
         <tr>
             <td>Jelszavad:</td>
@@ -29,6 +33,9 @@
                     </option>
                 </select>
             </td>
+        </tr>
+        <tr>
+            <td colspan="2" style="text-align: center;">Van már fiókod? <a th:href="@{/login}">Jelentkezz be!</a></td>
         </tr>
         <tr>
             <td><input name="submit" type="submit" value="Regisztráció"/></td>
