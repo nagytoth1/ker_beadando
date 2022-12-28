@@ -4,6 +4,7 @@ import keretrendszer.beadando.EmailValidationHelper;
 import keretrendszer.beadando.Models.User;
 import keretrendszer.beadando.Repositories.RolesRepo;
 import keretrendszer.beadando.Repositories.UserRepo;
+import org.apache.tomcat.websocket.AuthenticationException;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCrypt;
@@ -12,6 +13,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+
+import java.util.Random;
 
 @Controller
 public class UserController {
@@ -32,7 +35,13 @@ public class UserController {
         model.addAttribute("title", "Regisztráció");
         model.addAttribute("user", new User());
         model.addAttribute("roles", roles.findAll());
-        return "register";
+        return "register_new";
+    }
+
+    @GetMapping("/forgotpassword")
+    public String showForgotPasswordForm(Model model){
+        model.addAttribute("user", new User());
+        return "forgotpassword";
     }
 
 
@@ -42,29 +51,33 @@ public class UserController {
     public String loginUser(@ModelAttribute User user, Model m){
 
         User userLoggedIn = new User();
-        if(validateLogin(user.getUsername(), user.getPassword(), userLoggedIn)) //ha validáció sikeres, akkor dobjon a főoldalra
-        {
-            HomeController.setUserLoggedIn(userLoggedIn);
-            return "redirect:/";
+        try{
+            validateLogin(user.getUsername(), user.getPassword(), userLoggedIn);
         }
-
-
-        m.addAttribute("title", "Hiba bejelentkezéskor");
-        m.addAttribute("user", new User());
-        m.addAttribute("failMsg", "Invalid login credentials!");
-        return "login";
+        catch(AuthenticationException auth){
+            m.addAttribute("title", "Hiba bejelentkezéskor");
+            m.addAttribute("user", new User());
+            m.addAttribute("failMsg", auth.getMessage());
+            return showLoginForm(m);
+        }
+        HomeController.setUserLoggedIn(userLoggedIn);
+        return "redirect:/";
     }
 
-    private boolean validateLogin(String enteredValue, String enteredPlainPassword, User userLoggedIn) {
+    private void validateLogin(String enteredValue, String enteredPlainPassword, User userLoggedIn) throws AuthenticationException {
+        if(enteredValue == null || enteredValue.equals(""))
+            throw new AuthenticationException("Add meg a felhasználónevedet!");
+        if(enteredPlainPassword == null || enteredPlainPassword.equals(""))
+            throw new AuthenticationException("Add meg a jelszavadat!");
         User foundUser = EmailValidationHelper.isEmail(enteredValue) ?
                 users.findByEmail(enteredValue) :
                 users.findByUsername(enteredValue);
-        if(foundUser == null || !BCrypt.checkpw(enteredPlainPassword, foundUser.getPassword())) return false;
+        if(foundUser == null || !BCrypt.checkpw(enteredPlainPassword, foundUser.getPassword()))
+            throw new AuthenticationException("Hibás bejelentkezési adatok!");
         userLoggedIn.setUsername(foundUser.getUsername());
         userLoggedIn.setEmail(foundUser.getEmail());
         userLoggedIn.setRole(foundUser.getRole());
         userLoggedIn.setPassword(foundUser.getPassword());
-        return true;
     }
 
     @PostMapping("/register")
@@ -98,8 +111,38 @@ public class UserController {
             m.addAttribute("failMsg", e.getMessage());
             return this.showRegForm(m);
         }
-        System.out.printf("User beregisztrált %s névvel %s emaillel %s jelszóval\n", user.getUsername(), user.getEmail(), encryptedPasswd);
         m.addAttribute("succMsg", String.format("Sikeres regisztráció, %s. Kérlek, jelentkezz be a folytatáshoz!", regUser.getUsername()));
         return this.showLoginForm(m);
+    }
+
+    @PostMapping("/send")
+    public String sendMail(@ModelAttribute User u, Model m){
+        String mailAddr = u.getEmail();
+        //0 - does mailaddr even exist?
+        if(mailAddr == null || mailAddr.equals("")){
+            m.addAttribute("failMsg", "Nem adtál meg e-mail címet!");
+            return showForgotPasswordForm(m);
+        }
+        if(!EmailValidationHelper.isEmail(mailAddr)){
+            m.addAttribute("failMsg", "A megadott adat nem e-mail cím!");
+            return showForgotPasswordForm(m);
+        }
+        //1 - Can the given user be found in the table
+        User foundUser = users.findByEmail(mailAddr);
+        if(foundUser == null){
+            m.addAttribute("failMsg", "Ilyen e-mail címmel nem regisztráltak még felhasználót!");
+            return showForgotPasswordForm(m);
+        }
+        //2 - the passwd of foundUser should be set to a random value
+        int number = new Random().nextInt(999999);
+        String encryptedPasswd = BCrypt.hashpw(
+                String.format("%06d", number), //get 6-digit number
+                BCrypt.gensalt(10)); //hash password via BCrypt
+        //u.setPassword(encryptedPasswd);
+        System.out.printf("Email->user: Password has been set to '%06d'", number); //The plain passwd should be sent to the user for next login.
+        //3 - send email to user - Warn user they should change password after first login
+        //users.save(u);
+        m.addAttribute("succMsg", "E-mail címedre elküldtük a jelszavad visszaállításhoz szükséges lépéseket!");
+        return showForgotPasswordForm(m);
     }
 }

@@ -13,11 +13,9 @@
          </a></li>
      </ul>
      <ul class="nav navbar-nav mx-3" th:unless="${user==null}">
-         <li><a th:href="@{/profile}" class="dropdown-item">Profilom</a></li>
+         <li><a th:href="@{/profile}" class="btn btn-success mx-3">Profilom</a></li>
          <li>
-             <form th:action="@{/logout}" method="GET">
-                 <input class="dropdown-item" type="submit" value="Kijelentkezés" name="logout"/>
-             </form>
+             <a th:href="@{/logout}" class="btn btn-danger mx-3">Kijelentkezés</a>
          </li>
      </ul>
  </nav>
