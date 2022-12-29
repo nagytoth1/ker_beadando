@@ -14,27 +14,24 @@ public class ComputerController {
     @Autowired
     ComputerRepo computerRepo;
     @GetMapping("/upload")
-    public String uploadForm(Model model){
-        model.addAttribute("title", "[STACKER] Számítógép feltöltése");
-        model.addAttribute("computer", new Computer());
+    public String uploadForm(Model m){
+        m.addAttribute("title", "[STACKER] Számítógép feltöltése");
+        m.addAttribute("computer", new Computer());
         return "upload_computer";
     }
     @PostMapping("/upload")
-    public String uploadPC(@ModelAttribute Computer computer, Model model){
+    public String uploadPC(@ModelAttribute Computer computer, Model m){
         try {
+        /* Computer:
+            id; name; motherboard; ram; ram_quantity;
+            processor; videocard; powerSupply; storage; opsystem;
+        */
             Computer newComputer = new Computer();
-            newComputer.setName(computer.getName());
-            newComputer.setMotherboard(computer.getMotherboard());
-            newComputer.setOpsystem(computer.getOpsystem());
-            newComputer.setRam(computer.getRam());
-            newComputer.setRam_quantity(computer.getRam_quantity());
-            newComputer.setStorage(computer.getStorage());
-            newComputer.setPowerSupply(computer.getPowerSupply());
-            newComputer.setVideocard(computer.getVideocard());
+            newComputer.setComputer(computer);
             computerRepo.save(newComputer);
         }catch(Exception e){
-            model.addAttribute("errMsg", String.format("Hiba történt lekérdezés közben: %s", e.getLocalizedMessage()));
-            return "upload";
+            m.addAttribute("failMsg", String.format("Hiba történt lekérdezés közben: %s", e.getLocalizedMessage()));
+            return uploadForm(m);
         }
         return "redirect:/";
     }

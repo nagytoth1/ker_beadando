@@ -116,4 +116,16 @@ public class Computer {
     public void setOpsystem(Opsystem opsystem) {
         this.opsystem = opsystem;
     }
+
+    public void setComputer(Computer computer) {
+        this.setName(computer.getName());
+        this.setMotherboard(computer.getMotherboard());
+        this.setRam(computer.getRam());
+        this.setRam_quantity(computer.getRam_quantity());
+        this.setProcessor(computer.getProcessor());
+        this.setVideocard(computer.getVideocard());
+        this.setPowerSupply(computer.getPowerSupply());
+        this.setStorage(computer.getStorage());
+        this.setOpsystem(computer.getOpsystem());
+    }
 }

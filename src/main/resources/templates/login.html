@@ -16,10 +16,9 @@
           <a th:href="@{/login}" class="text-decoration-none display-2" style="font-size:1.5em;">Bejelentkezés</a>
       </div>
       <form class="p-3 mt-3" method="POST" th:object="${user}" action="login">
-        <p th:text="${failMsg}" style="color:red;"></p>
-        <p th:text="${succMsg}" style="color:green;"></p>
+        <div th:replace="fragments/_alerts :: alerts"></div> <!-- failMsg, succMsg outsourced to fragment -->
         <div class="form-field d-flex align-items-center text-center">
-          <input type="text" name="username" id="username" placeholder="kiskutyus73" th:field="*{username}" class="text-center" maxlength="20">
+          <input type="text" name="username" id="username" placeholder="kiskutyus73" th:field="*{username}" class="text-center" maxlength="150">
         </div>
         <div class="form-field d-flex align-items-center">
           <input type="password" name="password" id="password" placeholder="almakorte" th:field="*{password}" class="text-center" maxlength="20">

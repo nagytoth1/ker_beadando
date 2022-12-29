@@ -17,12 +17,8 @@ public class HomeController {
         model.addAttribute("user", userLoggedIn);
         return "main";
     }
-    @GetMapping("/profile")
-    public String showProfile(Model model){
-        model.addAttribute("user", userLoggedIn);
-        return "profile";
-    }
 
+    //----------GETTERS, SETTERS---------
     public static User getUserLoggedIn() {
         return userLoggedIn;
     }

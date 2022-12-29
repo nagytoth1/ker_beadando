@@ -9,12 +9,13 @@
     <link th:href="@{/assets/comp_favicon.png}" rel="icon" type="image/x-icon">
     <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet" />
     <link th:href="@{/css/main.css}" rel="stylesheet"/>
+    <script src="https://kit.fontawesome.com/3e5a359e4a.js" crossorigin="anonymous"></script>
 </head>
 <body>
     <nav th:replace="fragments/_navbar :: navbar"></nav>
     <main>
-        <p th:text="${succMsg}" class="display-5 text-center text-success"></p>
-        <p th:text="${errMsg}" class="display-5 text-center text-danger"></p>
+        <h5 th:text="${succMsg}" class="text-success text-center"></h5>
+        <h5 th:text="${failMsg}" class="text-danger text-center"></h5>
         <div layout:fragment="content"></div> <!-- ez a változó content rész -->
     </main>
 </body>
