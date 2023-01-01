@@ -1,67 +1,64 @@
 <!DOCTYPE html>
-<html lang="hu" xmlns:th="http://www.thymeleaf.org">
+<html lang="HU"
+      layout:decorate="layouts/layout_main">
 <head>
-  <meta charset="UTF-8">
-  <title th:text="${title}">Oldal neve</title>
-  <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet" />
-  <link th:href="@{/assets/comp_favicon.png}" rel="icon" type="image/x-icon">
-  <script src="https://kit.fontawesome.com/3e5a359e4a.js" crossorigin="anonymous"></script>
+  <title>Bejelentkezés</title>
 </head>
 <body>
-<nav th:replace="fragments/_navbar :: navbar"></nav>
-<h3 class="text-center my-3">Profilom</h3>
-<div class="card-body mx-auto">
-  <div th:replace="fragments/_alerts :: alerts"></div> <!-- failMsg, succMsg outsourced to fragment -->
-  <table style="width: 50vw;" class="mx-auto">
-    <thead>
-      <th scope="col" class="text-center">Felhasználónév</th>
-      <th scope="col" class="text-center">E-mail cím</th>
-      <th scope="col" class="text-center">Jelszó</th>
-    </thead>
-    <tbody>
-    <tr>
-      <td class="text-center"><p th:text="${user.username}"></p></td>
-      <td class="text-center"><p th:text="${user.email}"></p></td>
-      <td></td>
-    </tr>
-    <tr>
-      <td class="text-center">
-        <form th:object="${user}" th:action="@{/profile/modifyName}" method="GET">
-          <label for="username" class="d-inline" style="font-size: 18px;">Új felhasználónév:</label>
-          <input th:field="*{username}" type="text" name="username" id="username"
-                 class="d-inline mb-2 form-control" minlength="4" maxlength="40" style="width: min-content; text-align:center; margin: auto;">
-          <input type="submit" class="btn btn-success mb-3 p-2" value="Felhasználónevem megváltoztatása"/>
-        </form>
-      </td>
-      <td class="text-center">
-        <form th:object="${user}" th:action="@{/profile/modifyMail}" method="GET">
-          <label for="email" class="d-inline" style="font-size: 18px;">Új e-mail cím:</label>
-          <input th:field="*{email}" type="text" id="email" name="email" class="d-inline mb-3 form-control"
-                 minlength="6" maxlength="70" style="width: min-content; text-align:center; margin: auto;">
-          <input type="submit" class="btn btn-success mb-3 p-2" value="E-mail címem megváltoztatása"/>
-        </form>
-      </td>
-      <td>
-        <form th:object="${user}" th:action="@{/profile/modifyPass}" method="POST" class="justify-center mt-3 ms-3">
-          <input th:field="*{password}" type="password" name="password" id="password"
-                 class="form-control d-inline me-2" style="width: min-content;"
-                 placeholder="Új jelszó">
-          <input type="submit" class="btn btn-warning d-inline font-weight-bold" value="Jelszavam megváltoztatása">
-        </form>
-      </td>
+  <div class="wrapper" layout:fragment="content">
+    <h3 class="text-center my-3">Profilom</h3>
+    <div class="card-body mx-auto">
+    <table style="width: 50vw;" class="mx-auto">
+      <thead>
+        <th scope="col" class="text-center">Felhasználónév</th>
+        <th scope="col" class="text-center">E-mail cím</th>
+        <th scope="col" class="text-center">Jelszó</th>
+      </thead>
+      <tbody>
+      <tr>
+        <td class="text-center"><p th:text="${user.username}"></p></td>
+        <td class="text-center"><p th:text="${user.email}"></p></td>
+        <td></td>
       </tr>
-    <tr>
-      <td></td>
-      <td class="text-center">
-        <form th:object="${user}" th:action="@{/profile/delete}" method="GET">
-          <input type="submit" class="btn btn-danger p-1" value="Fiókom törlése" onclick="confirm('Biztosan le szeretnéd tiltani a saját fiókodat?')"/>
-        </form>
-      </td>
-      <td></td>
-    </tr>
-    </tbody>
-  </table>
-</div>
-</div>
+      <tr>
+        <td class="text-center">
+          <form th:object="${user}" th:action="@{/profile/modifyName}" method="GET">
+            <label for="username" class="d-inline" style="font-size: 18px;">Új felhasználónév:</label>
+            <input th:field="*{username}" type="text" name="username" id="username"
+                   class="d-inline mb-2 form-control" min="4" max="100" maxlength="100" style="width: min-content; text-align:center; margin: auto;">
+            <input type="submit" class="btn btn-success mb-3 p-2" value="Felhasználónevem megváltoztatása"/>
+          </form>
+        </td>
+        <td class="text-center">
+          <form th:object="${user}" th:action="@{/profile/modifyMail}" method="GET">
+            <label for="email" class="d-inline" style="font-size: 18px;">Új e-mail cím:</label>
+            <input th:field="*{email}" type="text" id="email" name="email" class="d-inline mb-3 form-control"
+                   min="4" max="100" maxlength="100" style="width: min-content; text-align:center; margin: auto;">
+            <input type="submit" class="btn btn-success mb-3 p-2" value="E-mail címem megváltoztatása"/>
+          </form>
+        </td>
+        <td>
+          <form th:object="${user}" th:action="@{/profile/modifyPass}" method="POST" class="justify-center mt-3 ms-3">
+            <input th:field="*{password}" type="password" name="password" id="password"
+                   class="form-control d-inline me-2" style="width: min-content;"
+                   min="4" max="40" maxlength="40"
+                   placeholder="Új jelszó">
+            <input type="submit" class="btn btn-warning d-inline font-weight-bold" value="Jelszavam megváltoztatása">
+          </form>
+        </td>
+        </tr>
+      <tr>
+        <td></td>
+        <td class="text-center">
+          <form th:object="${user}" th:action="@{/profile/delete}" method="GET">
+            <input type="submit" class="btn btn-danger p-1" value="Fiókom törlése" onclick="confirm('Biztosan le szeretnéd tiltani a saját fiókodat?')"/>
+          </form>
+        </td>
+        <td></td>
+      </tr>
+      </tbody>
+    </table>
+    </div>
+  </div>
 </body>
 </html>

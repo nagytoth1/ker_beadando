@@ -15,7 +15,7 @@ public class HomeController {
         if(userLoggedIn != null)
             model.addAttribute("succMsg", "Sikeres bejelentkezés!");
         model.addAttribute("user", userLoggedIn);
-        return "main";
+        return "index";
     }
 
     //----------GETTERS, SETTERS---------

@@ -17,16 +17,11 @@ public class ProfileController {
     UserRepo users;
     @GetMapping("/")
     public String showProfile(Model model){
+        //ne kelljen mindig átadni a bejelentkezett user-t, kéne egy layout_main.html, ami include-olja a navbar-t, és a content az változik
         model.addAttribute("user", HomeController.getUserLoggedIn());
         model.addAttribute("title", "Profilbeállítások");
+        System.out.println(HomeController.getUserLoggedIn());
         return "profile";
-    }
-    @GetMapping("/users")
-    public String showUsers(Model model){
-        model.addAttribute("title", "Felhasználók");
-        //model.addAttribute("userLoggedIn", HomeController.getUserLoggedIn());
-        model.addAttribute("users", users.findAll());
-        return "users";
     }
     @GetMapping("/modifyName")
     public String modifyName(Model m, @RequestParam String username){
@@ -48,18 +43,24 @@ public class ProfileController {
         return showProfile(m);
     }
 
-    @PostMapping("/modify")
-    public String updateCar(@RequestParam(value = "id") long id, @RequestParam String name){
-        try{
-            String failMsg, succMsg;
-            Optional<User> foundUser = users.findById(id);
-            if(!foundUser.isPresent())
-                failMsg = "Update Error: User to modify is not found";
-            //TODO: finish
-            return "redirect:/";
+    @GetMapping("/modifyMail")
+    public String modifyMail(Model m, @RequestParam String email){
+        User userToModify = HomeController.getUserLoggedIn();
+
+        if(userToModify.getEmail().equals(email)){
+            m.addAttribute("failMsg", "A megadott e-mail cím megegyezik a korábbival.");
+            return showProfile(m);
         }
-        catch(Exception e){
-            return "Update Error: Internal Server error";
+        try {
+            User.isEmail(email);
+            userToModify.setEmail(email);
+        } catch (AuthenticationException e) {
+            m.addAttribute("failMsg", e.getMessage());
+            return showProfile(m);
         }
+        users.save(userToModify);
+
+        m.addAttribute("succMsg", "Sikeresen módosítottam a felhasználónevedet!");
+        return showProfile(m);
     }
 }

@@ -16,19 +16,22 @@
     <a th:href="@{/register}" class="text-decoration-none display-2" style="font-size:1.5em;">Regisztráció</a>
   </div>
   <form th:action="@{/register}" th:object="${user}" class="p-3 mt-3" method="POST">
-    <div th:replace="fragments/_alerts :: alerts"></div> <!-- failMsg, succMsg outsourced to fragment -->
+    <!-- alert-es rész -->
+    <h5 th:text="${succMsg}" class="text-success text-center"></h5>
+    <h5 th:text="${failMsg}" class="text-danger text-center"></h5>
     <label for="email" class="ms-2">E-mail címed:</label>
     <div class="form-field d-flex align-items-center text-center">
       <input type="text" th:field="*{email}" name="email" id="email" placeholder="kiskutyus73@test.com" class="text-center" maxlength="150">
     </div>
     <label for="username" class="ms-2">Felhasználóneved:</label>
     <div class="form-field d-flex align-items-center text-center">
-      <input type="text" th:field="*{username}" name="username" id="username" placeholder="kiskutyus73" class="text-center" maxlength="20">
+      <input type="text" th:field="*{username}" name="username" id="username" placeholder="kiskutyus73" class="text-center" maxlength="100" min="4" max="100">
     </div>
     <label for="password" class="ms-2">Jelszavad:</label>
     <div class="form-field d-flex align-items-center">
-      <input type="password" th:field="*{password}" name="password" id="password" placeholder="almakorte" class="text-center" maxlength="20">
+      <input type="password" th:field="*{password}" name="password" id="password" placeholder="almakorte" class="text-center" maxlength="40" min="4" max="40">
     </div>
+    <!-- ezt majd kivenni-->
     <label for="role" class="ms-2">Jogosultságod:</label>
     <div class="d-flex align-items-center px-2 py-2">
       <select th:field="*{role}" class="form-control text-center" id="role" name="role">

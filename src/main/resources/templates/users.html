@@ -9,15 +9,19 @@
 </head>
 <body>
 <nav th:replace="fragments/_navbar :: navbar"></nav>
-<main>
-  <div class="card" style="width: 18rem;">
-    <img class="card-img-top" src="..." alt="Card image cap">
-    <div class="card-body">
-      <h5 class="card-title">Card title</h5>
-      <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-      <a href="#" class="btn btn-primary">Go somewhere</a>
+<div th:replace="fragments/_alerts :: alerts"></div> <!-- failMsg, succMsg outsourced to fragment -->
+<div class="row my-5">
+  <div th:each="u : ${users}" th:unless="${u.role.name == 'admin'}" class="col-sm-4 col-md-4 col-lg-4">
+    <div class="card mx-2" style="width: 20rem;">
+      <!-- <img class="card-img-top" src="..." alt="Card image cap">-->
+      <div class="card-body">
+        <h5 class="card-title" th:text="${u.username}"></h5>
+        <p class="card-text" th:text="${u.email}">E-mail cím</p>
+        <div class="text-center">
+        <a th:href="@{/delete/{id}(id=${u.id})}" class="btn btn-danger p-2" onclick="confirm('Biztosan szeretnéd törölni a fiókot?')">Törlés</a></div>
+      </div>
     </div>
   </div>
-</main>
+</div>
 </body>
 </html>

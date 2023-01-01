@@ -1,34 +1,35 @@
+<!-- itt nem include-oljuk be a layouts_main-t, nem kell navbar -->
 <!DOCTYPE html>
 <html lang="hu" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title th:text="${title}">Oldal neve</title>
-    <link th:href="@{/css/formstyle.css}" rel="stylesheet" />
-    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet" />
-    <link th:href="@{/assets/comp_favicon.png}" rel="icon" type="image/x-icon">
+  <title>Bejelentkezés</title>
+  <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet" />
+  <link th:href="@{/css/formstyle.css}" rel="stylesheet" />
 </head>
-  <body>
-    <div class="wrapper">
-      <div class="logo">
-        <img th:src="@{/assets/comp_favicon.png}"> <!-- login image -->
-      </div>
-      <div class="text-center name mt-3">
-          <a th:href="@{/login}" class="text-decoration-none display-2" style="font-size:1.5em;">Bejelentkezés</a>
-      </div>
-      <form class="p-3 mt-3" method="POST" th:object="${user}" action="login">
-        <div th:replace="fragments/_alerts :: alerts"></div> <!-- failMsg, succMsg outsourced to fragment -->
-        <div class="form-field d-flex align-items-center text-center">
-          <input type="text" name="username" id="username" placeholder="kiskutyus73" th:field="*{username}" class="text-center" maxlength="150">
-        </div>
-        <div class="form-field d-flex align-items-center">
-          <input type="password" name="password" id="password" placeholder="almakorte" th:field="*{password}" class="text-center" maxlength="20">
-        </div>
-        <button class="btn mt-3">Bejelentkezés</button>
-      </form>
-      <div class="text-center fs-6">
-        <a th:href="@{forgotpassword}">Elfelejtetted a jelszavadat?</a><br>
-        Nincs még fiókod? <a th:href="@{register}">Regisztrálok</a>
-      </div>
+<body> <!-- ez a content rész -->
+  <div class="wrapper">
+    <div class="logo">
+      <img th:src="@{/assets/comp_favicon.png}"> <!-- login image -->
     </div>
-  </body>
+    <div class="text-center name mt-3">
+        <a th:href="@{/login}" class="text-decoration-none display-2" style="font-size:1.5em;">Bejelentkezés</a>
+    </div>
+    <form class="p-3 mt-3" method="POST" th:object="${user}" action="login">
+      <!-- alert-es rész, itt jönnek a különböző hibás és sikeres műveletekről szóló üzenetek, minden oldalnak tudnia kell -->
+      <h5 th:text="${succMsg}" class="text-success text-center"></h5>
+      <h5 th:text="${failMsg}" class="text-danger text-center"></h5>
+      <div class="form-field d-flex align-items-center text-center">
+        <input type="text" name="username" id="username" placeholder="kiskutyus73" th:field="*{username}" class="text-center" maxlength="100" minlength="4" min="4" max="100">
+      </div>
+      <div class="form-field d-flex align-items-center">
+        <input type="password" name="password" id="password" placeholder="almakorte" th:field="*{password}" class="text-center" maxlength="40" minlength="4" min="4" max="40">
+      </div>
+      <button class="btn mt-3">Bejelentkezés</button>
+    </form>
+    <div class="text-center fs-6">
+      <a th:href="@{forgotpassword}">Elfelejtetted a jelszavadat?</a><br>
+      Nincs még fiókod? <a th:href="@{register}">Regisztrálok</a>
+    </div>
+  </div>
+</body>
 </html>

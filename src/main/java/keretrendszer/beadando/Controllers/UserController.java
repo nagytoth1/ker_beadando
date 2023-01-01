@@ -12,9 +12,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+
+import java.util.Optional;
 import java.util.Random;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Controller
@@ -33,6 +35,7 @@ public class UserController {
     }
     @GetMapping("/register")
     public String showRegForm(Model m){
+        System.out.println(HomeController.getUserLoggedIn());
         m.addAttribute("title", "Regisztráció");
         m.addAttribute("user", new User());
         m.addAttribute("roles", roles.findAll());
@@ -43,6 +46,31 @@ public class UserController {
     public String showForgotPasswordForm(Model model){
         model.addAttribute("user", new User());
         return "forgotpassword";
+    }
+
+    @GetMapping("/users")
+    public String showUsers(Model model){
+        model.addAttribute("title", "Felhasználók");
+        model.addAttribute("user", HomeController.getUserLoggedIn());
+        model.addAttribute("users", users.findAll());
+        return "users";
+    }
+
+    @GetMapping("/delete/{id}")
+    public String deleteUser(@PathVariable("id") long id, Model m){
+        Optional<User> u = users.findById(id);
+        if(!u.isPresent()){
+            m.addAttribute("failMsg", "Törlés sikertelen volt: Felhasználó nem található!");
+            return showUsers(m);
+        }
+        try{
+            users.deleteById(id);
+        }catch (Exception e){
+            m.addAttribute("failMsg", e.getMessage());
+            return showUsers(m);
+        }
+        m.addAttribute("succMsg", "A felhasználó törlése sikeres volt.");
+        return showUsers(m);
     }
 
 
@@ -64,9 +92,9 @@ public class UserController {
     private void validateLogin(String enteredValue, String enteredPlainPassword) throws AuthenticationException {
         //1 - validate user input
         if(enteredValue == null || enteredValue.equals(""))
-            throw new AuthenticationException("Add meg a felhasználónevedet vagy az e-mail címedet!");
+            throw new AuthenticationException("Kérlek, add meg a felhasználónevedet vagy az e-mail címedet!");
         if(enteredPlainPassword == null || enteredPlainPassword.equals(""))
-            throw new AuthenticationException("Add meg a jelszavadat!");
+            throw new AuthenticationException("Kérlek, add meg a jelszavadat!");
         validatePassword(enteredPlainPassword);
 
         //2 - search if user exists in database
@@ -74,48 +102,46 @@ public class UserController {
                     users.findByEmail(enteredValue) :
                     users.findByUsername(enteredValue);
 
-        if(foundUser == null || !BCrypt.checkpw(enteredPlainPassword, foundUser.getPassword()))
+        if(foundUser == null ||
+                !BCrypt.checkpw(enteredPlainPassword, foundUser.getPassword()))
             throw new AuthenticationException("Hibás bejelentkezési adatok!");
 
         //3 - if user exists, do the loginprocess
         HomeController.setUserLoggedIn(foundUser.getShallowCopy());
     }
-
-    private void validatePassword(String value) throws AuthenticationException {
-        if(value == null || value.equals(""))
-            throw new AuthenticationException("Add meg a jelszavadat!");
-        if(value.length() < 4)
-            throw new AuthenticationException("A megadott jelszó túl rövid!");
-        if(value.length() > 40)
-            throw new AuthenticationException("A megadott jelszó túl hosszú!");
-        //jelszó tartalmazhat speciális karaktereket
-        Pattern p = Pattern.compile("[\s_.;\n]");
-        Matcher m = p.matcher(value);
-        if(m.find())
-            throw new AuthenticationException("A felhasználónév nem tartalmazhatja a következő karaktereket: ['szóköz', '_', '.', ';', 'sortörés']!");
-    }
-
     @PostMapping("/register")
     public String addUser(@ModelAttribute User user, Model m){
+        //if password is not valid, then return
+        try {
+            validatePassword(user.getPassword());
+        } catch (AuthenticationException e) {
+            m.addAttribute("failMsg", e.getMessage());
+            return this.showRegForm(m);
+        }
+        if(!User.isEmail(user.getEmail())){
+            m.addAttribute("failMsg", "A megadott adat nem e-mail cím!");
+            return showRegForm(m);
+        }
         String encryptedPasswd = BCrypt.hashpw(
                 user.getPassword(),
                 BCrypt.gensalt(10)); //hash password via BCrypt
+        //if user already exists with given email - must be unique
         if(users.findByEmail(user.getEmail()) != null){
             m.addAttribute("failMsg", "Ezzel az e-mail címmel már regisztráltak felhasználót.");
             return this.showRegForm(m);
         }
-
+        //if user already exists with given username - must be unique
         if(users.findByUsername(user.getUsername()) != null){
             m.addAttribute("failMsg", "Ezzel a felhasználónévvel már regisztráltak felhasználót.");
             return this.showRegForm(m);
         }
-
         User regUser = new User();
         try {
             regUser.setUsername(user.getUsername());
             regUser.setPassword(encryptedPasswd);
             regUser.setEmail(user.getEmail());
-        } catch (AuthenticationException e) {
+        }
+        catch (Exception e) {
             m.addAttribute("failMsg", e.getMessage());
             return this.showRegForm(m);
         }
@@ -131,25 +157,42 @@ public class UserController {
             m.addAttribute("failMsg", e.getMessage());
             return this.showRegForm(m);
         }
+        if(HomeController.getUserLoggedIn() != null){
+            m.addAttribute("succMsg", String.format("Sikeresen hozzáadtad %s felhasználót!", regUser.getUsername()));
+            return this.showUsers(m);
+        }
         m.addAttribute("succMsg", String.format("Sikeres regisztráció, %s. Kérlek, jelentkezz be a folytatáshoz!", regUser.getUsername()));
         return this.showLoginForm(m);
+    }
+    private void validatePassword(String passwd) throws AuthenticationException {
+        if(passwd == null || passwd.equals(""))
+            throw new AuthenticationException("Add meg a jelszavadat!");
+        if(passwd.length() < 4)
+            throw new AuthenticationException("A megadott jelszó túl rövid!");
+        if(passwd.length() > 40)
+            throw new AuthenticationException("A megadott jelszó túl hosszú!");
+        //jelszó tartalmazhat speciális karaktereket
+        if(Pattern.compile("[\s_.;\n]")
+                .matcher(passwd)
+                .find())
+            throw new AuthenticationException("A felhasználónév nem tartalmazhatja a következő karaktereket: ['szóköz', '_', '.', ';', 'sortörés']!");
     }
     @Autowired
     private EmailSender sender;
     @PostMapping("/send")
-    public String sendMail(@ModelAttribute User u, Model m) throws AuthenticationException {
-        String mailAddr = u.getEmail();
+    public String sendMail(@ModelAttribute User u, Model m) {
+        String email = u.getEmail();
         //0 - does mailaddr even exist?
-        if(mailAddr == null || mailAddr.equals("")){
+        if(email == null || email.equals("")){
             m.addAttribute("failMsg", "Nem adtál meg e-mail címet!");
             return showForgotPasswordForm(m);
         }
-        if(!User.isEmail(mailAddr)){
+        if(!User.isEmail(email)){
             m.addAttribute("failMsg", "A megadott adat nem e-mail cím!");
             return showForgotPasswordForm(m);
         }
         //1 - Can the given user be found in the table
-        User foundUser = users.findByEmail(mailAddr);
+        User foundUser = users.findByEmail(email);
         if(foundUser == null){
             m.addAttribute("failMsg", "Ilyen e-mail címmel nem regisztráltak még felhasználót!");
             return showForgotPasswordForm(m);
