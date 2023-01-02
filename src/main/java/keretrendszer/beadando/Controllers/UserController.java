@@ -35,10 +35,10 @@ public class UserController {
     }
     @GetMapping("/register")
     public String showRegForm(Model m){
-        System.out.println(HomeController.getUserLoggedIn());
-        m.addAttribute("title", "Regisztráció");
         m.addAttribute("user", new User());
         m.addAttribute("roles", roles.findAll());
+        if(HomeController.getUserLoggedIn() != null)
+            m.addAttribute("title", "Felhasználó felvétele");
         return "register";
     }
 
@@ -89,31 +89,11 @@ public class UserController {
         }
         return "redirect:/";
     }
-    private void validateLogin(String enteredValue, String enteredPlainPassword) throws AuthenticationException {
-        //1 - validate user input
-        if(enteredValue == null || enteredValue.equals(""))
-            throw new AuthenticationException("Kérlek, add meg a felhasználónevedet vagy az e-mail címedet!");
-        if(enteredPlainPassword == null || enteredPlainPassword.equals(""))
-            throw new AuthenticationException("Kérlek, add meg a jelszavadat!");
-        validatePassword(enteredPlainPassword);
-
-        //2 - search if user exists in database
-        User foundUser = User.isEmail(enteredValue) ?
-                    users.findByEmail(enteredValue) :
-                    users.findByUsername(enteredValue);
-
-        if(foundUser == null ||
-                !BCrypt.checkpw(enteredPlainPassword, foundUser.getPassword()))
-            throw new AuthenticationException("Hibás bejelentkezési adatok!");
-
-        //3 - if user exists, do the loginprocess
-        HomeController.setUserLoggedIn(foundUser.getShallowCopy());
-    }
     @PostMapping("/register")
     public String addUser(@ModelAttribute User user, Model m){
         //if password is not valid, then return
         try {
-            validatePassword(user.getPassword());
+            User.validatePassword(user.getPassword());
         } catch (AuthenticationException e) {
             m.addAttribute("failMsg", e.getMessage());
             return this.showRegForm(m);
@@ -164,18 +144,25 @@ public class UserController {
         m.addAttribute("succMsg", String.format("Sikeres regisztráció, %s. Kérlek, jelentkezz be a folytatáshoz!", regUser.getUsername()));
         return this.showLoginForm(m);
     }
-    private void validatePassword(String passwd) throws AuthenticationException {
-        if(passwd == null || passwd.equals(""))
-            throw new AuthenticationException("Add meg a jelszavadat!");
-        if(passwd.length() < 4)
-            throw new AuthenticationException("A megadott jelszó túl rövid!");
-        if(passwd.length() > 40)
-            throw new AuthenticationException("A megadott jelszó túl hosszú!");
-        //jelszó tartalmazhat speciális karaktereket
-        if(Pattern.compile("[\s_.;\n]")
-                .matcher(passwd)
-                .find())
-            throw new AuthenticationException("A felhasználónév nem tartalmazhatja a következő karaktereket: ['szóköz', '_', '.', ';', 'sortörés']!");
+    private void validateLogin(String enteredValue, String enteredPlainPassword) throws AuthenticationException {
+        //1 - validate user input
+        if(enteredValue == null || enteredValue.equals(""))
+            throw new AuthenticationException("Kérlek, add meg a felhasználónevedet vagy az e-mail címedet!");
+        if(enteredPlainPassword == null || enteredPlainPassword.equals(""))
+            throw new AuthenticationException("Kérlek, add meg a jelszavadat!");
+        User.validatePassword(enteredPlainPassword);
+
+        //2 - search if user exists in database
+        User foundUser = User.isEmail(enteredValue) ?
+                users.findByEmail(enteredValue) :
+                users.findByUsername(enteredValue);
+
+        if(foundUser == null ||
+                !BCrypt.checkpw(enteredPlainPassword, foundUser.getPassword()))
+            throw new AuthenticationException("Hibás bejelentkezési adatok!");
+
+        //3 - if user exists, do the loginprocess
+        HomeController.setUserLoggedIn(foundUser.getShallowCopy());
     }
     @Autowired
     private EmailSender sender;

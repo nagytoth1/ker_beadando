@@ -4,6 +4,8 @@ import keretrendszer.beadando.Models.User;
 import keretrendszer.beadando.Repositories.UserRepo;
 import org.apache.tomcat.websocket.AuthenticationException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.Banner;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -60,7 +62,25 @@ public class ProfileController {
         }
         users.save(userToModify);
 
-        m.addAttribute("succMsg", "Sikeresen módosítottam a felhasználónevedet!");
+        m.addAttribute("succMsg", "Sikeresen módosítottam az e-mail címedet!");
+        return showProfile(m);
+    }
+    @PostMapping("/modifyPasswd")
+    public String modifyPasswd(@RequestParam String newpasswd, Model m){
+        try {
+            User.validatePassword(newpasswd);
+        } catch (AuthenticationException e) {
+            m.addAttribute("failMsg", e.getMessage());
+            return showProfile(m);
+        }
+
+        String encryptedPasswd = BCrypt.hashpw(
+                newpasswd,
+                BCrypt.gensalt(10)); //hash password via BCrypt
+        User userToModify = HomeController.getUserLoggedIn();
+        userToModify.setPassword(encryptedPasswd);
+        users.save(userToModify);
+        m.addAttribute("succMsg", "Jelszavadat sikeresen módosítottam!");
         return showProfile(m);
     }
 }

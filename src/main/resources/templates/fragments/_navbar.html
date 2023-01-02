@@ -16,10 +16,10 @@
      <ul class="nav navbar-nav mx-3" th:unless="${user==null}">
          <!-- Stacker-funkciók: termék felvétele és törlése -->
          <li th:if="${user.role.name == 'stacker'}">
-             <a th:href="@{/create}" class="btn btn-warning mx-3">Termék felvétele</a></li>
+             <a th:href="@{/upload}" class="btn btn-warning mx-3">Termék felvétele</a></li>
+         <!-- Admin-funkciók: Felhasználó felvétele (lényegében regisztráció) -->
          <li th:if="${user.role.name == 'admin'}">
              <a th:href="@{/users}" class="btn btn-warning mx-2"><i class="fa fa-user mx-2" aria-hidden="true"></i>Felhasználók</a></li>
-         <!-- Admin-funkciók: Felhasználó felvétele (lényegében regisztráció) -->
          <li th:if="${user.role.name == 'admin'}">
              <a th:href="@{/register}" class="btn btn-warning mx-2"> <i class="fa fa-user-plus mx-2" aria-hidden="true"></i>Felhasználó felvétele</a></li>
          <!-- Alap felhasználói funkciók: profilbeállítások, kijelentkezés -->

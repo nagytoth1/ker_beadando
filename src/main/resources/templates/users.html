@@ -1,16 +1,12 @@
 <!DOCTYPE html>
-<html lang="hu" xmlns:th="http://www.thymeleaf.org">
+<html lang="hu"
+      layout:decorate="layouts/layout_main">
 <head>
   <meta charset="UTF-8">
-  <title th:text="${title}">Oldal neve</title>
-  <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet" />
-  <link th:href="@{/assets/comp_favicon.png}" rel="icon" type="image/x-icon">
-  <script src="https://kit.fontawesome.com/3e5a359e4a.js" crossorigin="anonymous"></script>
+  <title>Felhasználók</title>
 </head>
 <body>
-<nav th:replace="fragments/_navbar :: navbar"></nav>
-<div th:replace="fragments/_alerts :: alerts"></div> <!-- failMsg, succMsg outsourced to fragment -->
-<div class="row my-5">
+<div class="row my-5" layout:fragment="content">
   <div th:each="u : ${users}" th:unless="${u.role.name == 'admin'}" class="col-sm-4 col-md-4 col-lg-4">
     <div class="card mx-2" style="width: 20rem;">
       <!-- <img class="card-img-top" src="..." alt="Card image cap">-->

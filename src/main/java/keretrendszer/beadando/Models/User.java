@@ -1,9 +1,11 @@
 package keretrendszer.beadando.Models;
 
+import keretrendszer.beadando.Controllers.HomeController;
 import org.apache.tomcat.websocket.AuthenticationException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 
 import javax.persistence.*;
 import java.util.Objects;
@@ -100,6 +102,19 @@ public class User {
         return Pattern.compile(EMAIL_REGEX_PATTERN)
                 .matcher(value)
                 .matches();
+    }
+    public static void validatePassword(String passwd) throws AuthenticationException {
+        if(passwd == null || passwd.equals(""))
+            throw new AuthenticationException("Add meg a jelszavadat!");
+        if(passwd.length() < 4)
+            throw new AuthenticationException("A megadott jelszó túl rövid!");
+        if(passwd.length() > 40)
+            throw new AuthenticationException("A megadott jelszó túl hosszú!");
+        //jelszó tartalmazhat speciális karaktereket
+        if(Pattern.compile("[\s_.;\n]")
+                .matcher(passwd)
+                .find())
+            throw new AuthenticationException("A felhasználónév nem tartalmazhatja a következő karaktereket: ['szóköz', '_', '.', ';', 'sortörés']!");
     }
 
     @Override

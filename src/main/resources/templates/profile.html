@@ -38,12 +38,13 @@
           </form>
         </td>
         <td>
-          <form th:object="${user}" th:action="@{/profile/modifyPass}" method="POST" class="justify-center mt-3 ms-3">
-            <input th:field="*{password}" type="password" name="password" id="password"
-                   class="form-control d-inline me-2" style="width: min-content;"
-                   min="4" max="40" maxlength="40"
+          <form th:action="@{/profile/modifyPasswd}" method="POST" class="justify-center mt-3 ms-3">
+            <label for="newpasswd" class="d-inline" style="font-size: 18px;">Új jelszó:</label>
+            <input type="password" name="newpasswd" id="newpasswd"
+                   class="d-inline mb-3 form-control" style="width: min-content;"
+                   minlength="4" maxlength="40"
                    placeholder="Új jelszó">
-            <input type="submit" class="btn btn-warning d-inline font-weight-bold" value="Jelszavam megváltoztatása">
+            <input type="submit" class="btn btn-warning d-inline font-weight-bold mb-3 p-2" value="Jelszavam megváltoztatása">
           </form>
         </td>
         </tr>

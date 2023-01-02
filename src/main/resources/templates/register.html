@@ -2,7 +2,7 @@
 <html lang="hu" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
-  <title th:text="${title}">Oldal neve</title>
+  <title th:text="${title}">Regisztráció</title>
   <link th:href="@{/css/formstyle.css}" rel="stylesheet" />
   <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet" />
   <link th:href="@{/assets/comp_favicon.png}" rel="icon" type="image/x-icon">
@@ -13,7 +13,7 @@
     <img th:src="@{/assets/comp_favicon.png}"> <!-- reg image -->
   </div>
   <div class="text-center name mt-3">
-    <a th:href="@{/register}" class="text-decoration-none display-2" style="font-size:1.5em;">Regisztráció</a>
+    <a th:href="@{/register}" th:text="${title}" class="text-decoration-none display-2" style="font-size:1.5em;">Regisztráció</a>
   </div>
   <form th:action="@{/register}" th:object="${user}" class="p-3 mt-3" method="POST">
     <!-- alert-es rész -->
@@ -43,10 +43,13 @@
         </option>
       </select>
     </div>
-    <div class="d-flex align-items-center">
+    <div class="d-flex align-items-center" th:if="${user == null}">
       <p>Van már fiókod? <a th:href="@{/login}">Jelentkezz be!</a></p>
     </div>
-    <button class="btn mt-3">Regisztráció</button>
+    <div class="d-flex align-items-center" th:unless="${user == null}">
+      <a class="text-center mx-auto" href="/">Vissza</a>
+    </div>
+    <button class="btn mt-3" th:text="${title}">Regisztráció</button>
   </form>
 </div>
 </body>
