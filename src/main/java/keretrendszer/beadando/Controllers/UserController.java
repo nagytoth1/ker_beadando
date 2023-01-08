@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.Optional;
 import java.util.Random;
-import java.util.regex.Pattern;
 
 @Controller
 public class UserController {
@@ -59,7 +58,7 @@ public class UserController {
     @GetMapping("/delete/{id}")
     public String deleteUser(@PathVariable("id") long id, Model m){
         Optional<User> u = users.findById(id);
-        if(!u.isPresent()){
+        if(u.isEmpty()){
             m.addAttribute("failMsg", "Törlés sikertelen volt: Felhasználó nem található!");
             return showUsers(m);
         }
@@ -91,16 +90,18 @@ public class UserController {
     }
     @PostMapping("/register")
     public String addUser(@ModelAttribute User user, Model m){
+        if(!HomeController.getUserLoggedIn().getRole().getName().equals("admin")){
+            m.addAttribute("failMsg", "Nincs jogod felhasználót hozzáadni a rendszerhez!");
+            return "redirect:/";
+        }
         //if password is not valid, then return
         try {
-            User.validatePassword(user.getPassword());
+            User.getValidator().validateUsername(user.getUsername());
+            User.getValidator().validatePassword(user.getPassword());
+            User.getValidator().validateEmail(user.getEmail());
         } catch (AuthenticationException e) {
             m.addAttribute("failMsg", e.getMessage());
             return this.showRegForm(m);
-        }
-        if(!User.isEmail(user.getEmail())){
-            m.addAttribute("failMsg", "A megadott adat nem e-mail cím!");
-            return showRegForm(m);
         }
         String encryptedPasswd = BCrypt.hashpw(
                 user.getPassword(),
@@ -115,16 +116,11 @@ public class UserController {
             m.addAttribute("failMsg", "Ezzel a felhasználónévvel már regisztráltak felhasználót.");
             return this.showRegForm(m);
         }
+
         User regUser = new User();
-        try {
-            regUser.setUsername(user.getUsername());
-            regUser.setPassword(encryptedPasswd);
-            regUser.setEmail(user.getEmail());
-        }
-        catch (Exception e) {
-            m.addAttribute("failMsg", e.getMessage());
-            return this.showRegForm(m);
-        }
+        regUser.setUsername(user.getUsername());
+        regUser.setPassword(encryptedPasswd);
+        regUser.setEmail(user.getEmail());
         regUser.setRole(user.getRole());
 
         try{
@@ -137,6 +133,7 @@ public class UserController {
             m.addAttribute("failMsg", e.getMessage());
             return this.showRegForm(m);
         }
+        //ha admin adja hozzá
         if(HomeController.getUserLoggedIn() != null){
             m.addAttribute("succMsg", String.format("Sikeresen hozzáadtad %s felhasználót!", regUser.getUsername()));
             return this.showUsers(m);
@@ -146,43 +143,38 @@ public class UserController {
     }
     private void validateLogin(String enteredValue, String enteredPlainPassword) throws AuthenticationException {
         //1 - validate user input
-        if(enteredValue == null || enteredValue.equals(""))
-            throw new AuthenticationException("Kérlek, add meg a felhasználónevedet vagy az e-mail címedet!");
-        if(enteredPlainPassword == null || enteredPlainPassword.equals(""))
-            throw new AuthenticationException("Kérlek, add meg a jelszavadat!");
-        User.validatePassword(enteredPlainPassword);
-
+        User foundUser;
+        if(User.getValidator().validateEmail(enteredValue)){ //ha nem felel meg az e-mail paramétereinek, felhasználónévként vizsgáljuk tovább
+            foundUser = users.findByEmail(enteredValue); //ekkor tudjuk, hogy email cím lett megadva, kereshetünk email címmel
+        }
+        else{
+            User.getValidator().validateUsername(enteredValue);
+            foundUser = users.findByUsername(enteredValue); //ekkor tudjuk, hogy megfelel a username követelményeinek
+        }
+        User.getValidator().validatePassword(enteredPlainPassword);
         //2 - search if user exists in database
-        User foundUser = User.isEmail(enteredValue) ?
-                users.findByEmail(enteredValue) :
-                users.findByUsername(enteredValue);
-
         if(foundUser == null ||
-                !BCrypt.checkpw(enteredPlainPassword, foundUser.getPassword()))
+            !BCrypt.checkpw(enteredPlainPassword, foundUser.getPassword()))
             throw new AuthenticationException("Hibás bejelentkezési adatok!");
-
         //3 - if user exists, do the loginprocess
         HomeController.setUserLoggedIn(foundUser.getShallowCopy());
     }
     @Autowired
     private EmailSender sender;
     @PostMapping("/send")
-    public String sendMail(@ModelAttribute User u, Model m) {
-        String email = u.getEmail();
-        //0 - does mailaddr even exist?
-        if(email == null || email.equals("")){
-            m.addAttribute("failMsg", "Nem adtál meg e-mail címet!");
-            return showForgotPasswordForm(m);
-        }
-        if(!User.isEmail(email)){
-            m.addAttribute("failMsg", "A megadott adat nem e-mail cím!");
-            return showForgotPasswordForm(m);
+    public String sendMail(@ModelAttribute User user, Model model) {
+        String enteredEmail = user.getEmail();
+        try{
+            User.getValidator().validateEmail(enteredEmail);
+        }catch(AuthenticationException argExc){
+            model.addAttribute("failMsg", argExc.getMessage());
+            return showForgotPasswordForm(model);
         }
         //1 - Can the given user be found in the table
-        User foundUser = users.findByEmail(email);
+        User foundUser = users.findByEmail(enteredEmail);
         if(foundUser == null){
-            m.addAttribute("failMsg", "Ilyen e-mail címmel nem regisztráltak még felhasználót!");
-            return showForgotPasswordForm(m);
+            model.addAttribute("failMsg", "Ilyen e-mail címmel nem regisztráltak még felhasználót!");
+            return showForgotPasswordForm(model);
         }
         //2 - the passwd of foundUser should be set to a random value
         int number = new Random().nextInt(999999);
@@ -193,12 +185,12 @@ public class UserController {
         System.out.printf("Email->user: Password has been set to '%06d'\n", number); //The plain passwd should be sent to the user for next login.
         //3 - send email to user - Warn user they should change password after first login
         users.save(foundUser);
-        m.addAttribute("succMsg", "E-mail címedre elküldtük a jelszavad visszaállításhoz szükséges lépéseket!");
+        model.addAttribute("succMsg", "E-mail címedre elküldtük a jelszavad visszaállításhoz szükséges lépéseket!");
         System.out.println("Sending mail....");
         sender.sendMail(foundUser.getEmail(),
                 "Forgot password",
                 String.format("Your new password: %06d\n Don't forget to change it!", number));
         System.out.println("Mail sent!");
-        return showForgotPasswordForm(m);
+        return showForgotPasswordForm(model);
     }
 }

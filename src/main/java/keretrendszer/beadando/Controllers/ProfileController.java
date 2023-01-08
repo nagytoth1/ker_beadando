@@ -2,6 +2,7 @@ package keretrendszer.beadando.Controllers;
 
 import keretrendszer.beadando.Models.User;
 import keretrendszer.beadando.Repositories.UserRepo;
+import keretrendszer.beadando.UserValidator;
 import org.apache.tomcat.websocket.AuthenticationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.Banner;
@@ -27,18 +28,19 @@ public class ProfileController {
     }
     @GetMapping("/modifyName")
     public String modifyName(Model m, @RequestParam String username){
+        try{
+            User.getValidator().validateUsername(username);
+        }catch(AuthenticationException e){
+            m.addAttribute("failMsg", e.getMessage());
+            return showProfile(m);
+        }
         User userToModify = HomeController.getUserLoggedIn();
 
         if(userToModify.getUsername().equals(username)){
             m.addAttribute("failMsg", "A megadott felhasználónév megegyezik a korábbival");
             return showProfile(m);
         }
-        try {
-            userToModify.setUsername(username);
-        } catch (AuthenticationException e) {
-            m.addAttribute("failMsg", e.getMessage());
-            return showProfile(m);
-        }
+        userToModify.setUsername(username);
         users.save(userToModify);
 
         m.addAttribute("succMsg", "Sikeresen módosítottam a felhasználónevedet!");
@@ -47,19 +49,20 @@ public class ProfileController {
 
     @GetMapping("/modifyMail")
     public String modifyMail(Model m, @RequestParam String email){
-        User userToModify = HomeController.getUserLoggedIn();
+        try{
+            User.getValidator().validateEmail(email);
+        }catch(AuthenticationException e){
+            m.addAttribute("failMsg", e.getMessage());
+            return showProfile(m);
+        }
 
+        User userToModify = HomeController.getUserLoggedIn();
         if(userToModify.getEmail().equals(email)){
             m.addAttribute("failMsg", "A megadott e-mail cím megegyezik a korábbival.");
             return showProfile(m);
         }
-        try {
-            User.isEmail(email);
-            userToModify.setEmail(email);
-        } catch (AuthenticationException e) {
-            m.addAttribute("failMsg", e.getMessage());
-            return showProfile(m);
-        }
+
+        userToModify.setEmail(email);
         users.save(userToModify);
 
         m.addAttribute("succMsg", "Sikeresen módosítottam az e-mail címedet!");
@@ -68,7 +71,7 @@ public class ProfileController {
     @PostMapping("/modifyPasswd")
     public String modifyPasswd(@RequestParam String newpasswd, Model m){
         try {
-            User.validatePassword(newpasswd);
+            User.getValidator().validatePassword(newpasswd);
         } catch (AuthenticationException e) {
             m.addAttribute("failMsg", e.getMessage());
             return showProfile(m);

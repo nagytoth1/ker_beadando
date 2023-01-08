@@ -1,22 +1,18 @@
 package keretrendszer.beadando.Models;
 
-import keretrendszer.beadando.Controllers.HomeController;
-import org.apache.tomcat.websocket.AuthenticationException;
+import keretrendszer.beadando.UserValidator;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import org.springframework.security.crypto.bcrypt.BCrypt;
-
 import javax.persistence.*;
 import java.util.Objects;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @Entity
 @Table(name = "users")
 @EntityScan
 @EnableJpaRepositories
 public class User {
+    private static final UserValidator validator = new UserValidator();
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -54,31 +50,15 @@ public class User {
         return username;
     }
 
-    public void setUsername(String username) throws AuthenticationException {
-        //TODO: setter-ben ha Exception van, akkor összetojja magát :'(
-        //username must be between 4 and 40 characters
-        if(username.length() < 4)
-            throw new AuthenticationException("Túl rövid felhasználónév!");
-        if(username.length() > 40)
-            throw new AuthenticationException("Túl hosszú felhasználónév!");
-        // Matches anything OTHER than an alphanumeric character including underscore. Equivalent to [^A-Za-z0-9_].
-        Pattern p = Pattern.compile("\\W");
-        Matcher m = p.matcher(username);
-        if(m.find())
-            throw new AuthenticationException("A felhasználónév nem tartalmazhat speciális karaktereket!");
-        this.username = username;
-    }
-
+    public void setUsername(String value) { this.username = value;}
     public String getPassword() {
         return password;
     }
-    //since the passwd is stored not in plain text, but in a hashed way, therefore we can't validate here in setter
-    public void setPassword(String password) { this.password = password; }
+    public void setPassword(String value) { this.password = value;}
 
     public Role getRole() {
         return role;
     }
-
     public void setRole(Role role) {
         this.role = role;
     }
@@ -86,35 +66,12 @@ public class User {
     public String getEmail() {
         return email;
     }
-    public void setEmail(String value) throws AuthenticationException {
-        if(value.length() > 255)
-            throw new AuthenticationException("A megadott e-mail cím túl hosszú");
-        if(!isEmail(value))
-            throw new AuthenticationException("A megadott adat nem e-mail cím!");
-        this.email = value;
-    }
+    public void setEmail(String value) { this.email = value; }
 
     public boolean isEnabled() { return enabled; }
     public void setEnabled(boolean enabled) { this.enabled = enabled; }
-
-    private static final String EMAIL_REGEX_PATTERN = "^[-a-z0-9~!$%^&*_=+}{\\'?]+(\\.[-a-z0-9~!$%^&*_=+}{\\'?]+)*@([a-z0-9_][-a-z0-9_]*(\\.[-a-z0-9_]+)*\\.(aero|arpa|biz|com|coop|edu|gov|info|int|mil|museum|name|net|org|pro|travel|mobi|[a-z][a-z])|([0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}))(:[0-9]{1,5})?$";
-    public static boolean isEmail(String value) {
-        return Pattern.compile(EMAIL_REGEX_PATTERN)
-                .matcher(value)
-                .matches();
-    }
-    public static void validatePassword(String passwd) throws AuthenticationException {
-        if(passwd == null || passwd.equals(""))
-            throw new AuthenticationException("Add meg a jelszavadat!");
-        if(passwd.length() < 4)
-            throw new AuthenticationException("A megadott jelszó túl rövid!");
-        if(passwd.length() > 40)
-            throw new AuthenticationException("A megadott jelszó túl hosszú!");
-        //jelszó tartalmazhat speciális karaktereket
-        if(Pattern.compile("[\s_.;\n]")
-                .matcher(passwd)
-                .find())
-            throw new AuthenticationException("A felhasználónév nem tartalmazhatja a következő karaktereket: ['szóköz', '_', '.', ';', 'sortörés']!");
+    public static UserValidator getValidator(){
+        return validator;
     }
 
     @Override
