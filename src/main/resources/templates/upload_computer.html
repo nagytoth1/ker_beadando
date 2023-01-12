@@ -1,19 +1,9 @@
 <!DOCTYPE html>
-<html lang="hu"
-      xmlns:th="http://www.thymeleaf.org">
-<head>
-  <meta charset="UTF-8">
-  <title th:text="${title}">Oldal neve</title>
-</head>
+<html lang="HU"
+      layout:decorate="~{layouts/layout_main}">
 <body>
-<h1>Számítógép feltöltése</h1>
-<form th:action="@{/create}" method="POST" enctype="multipart/form-data"> <!-- lehet benne képfeltöltés is -->
-    <div class="row">
+    <div class="wrapper" layout:fragment="content">
         <div th:replace="fragments/_upcard :: upload_card"></div>
     </div>
-    <div class="d-grid">
-      <button class="btn btn-lg my-5 mx-auto px-5 w-25 border border-dark rounded-1" type="submit">Feltöltés</button>
-    </div>
-</form>
 </body>
 </html>

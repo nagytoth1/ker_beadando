@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="hu"
+      layout:decorate="~{layouts/layout_main}">
+<head>
+      <meta charset="UTF-8">
+      <title>Számítógép részletei</title>
+</head>
+<body>
+<div class="row my-5" layout:fragment="content">
+  <div class="col-lg-6 col-md-8 mx-auto">
+    <div class="card mb-3 pb-5">
+      <div class="card-header">
+        <h5 class="card-title" th:text="${computer.name}"></h5>
+        <p class="card-text text-secondary" th:text="${computer.motherboard}">Alaplap</p>
+      </div>
+      <div class="card-body">
+        <div class="text-center">
+          <a href="#" class="btn btn-danger p-2">Megveszem</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>
