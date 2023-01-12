@@ -17,4 +17,36 @@ public class Videocard {
 
     @Column(nullable = false, columnDefinition = "varchar(50) default 'vízhűtés'")
     private String coolant;
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public float getClockrate() {
+        return clockrate;
+    }
+
+    public void setClockrate(float clockrate) {
+        this.clockrate = clockrate;
+    }
+
+    public String getCoolant() {
+        return coolant;
+    }
+
+    public void setCoolant(String coolant) {
+        this.coolant = coolant;
+    }
 }

@@ -27,7 +27,7 @@ public class ComputerController {
             processor; videocard; powerSupply; storage; opsystem;
         */
             Computer newComputer = new Computer();
-            newComputer.setComputer(computer);
+            newComputer.setComputer(computer); //hajtsa végre az összes settert rajta
             computerRepo.save(newComputer);
         }catch(Exception e){
             m.addAttribute("failMsg", String.format("Hiba történt lekérdezés közben: %s", e.getLocalizedMessage()));

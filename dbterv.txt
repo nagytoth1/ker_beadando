@@ -24,6 +24,9 @@ id, name
 storage
 id, name, type, capacity, speed
 
+computer_storage
+computer_id, storage_id
+
 1:N - egy ram, cpu, gpu, psu, opsystem több számítógéphez tartozhat -> a computer táblában kellenek foreign key-ek ezekre
 N:N - egy gép többféle storage lehet, 
 	viszont egy storage több gépben is lehet

@@ -1,6 +1,8 @@
 package keretrendszer.beadando.Models;
 
 import javax.persistence.*;
+import java.util.Set;
+
 @Entity
 @Table(name = "computers")
 public class Computer {
@@ -33,9 +35,11 @@ public class Computer {
     @JoinColumn(name="psu_id", nullable=false)
     private Psu powerSupply;
 
-    @ManyToOne
-    @JoinColumn(name="storage_id", nullable=false)
-    private Storage storage;
+    @ManyToMany
+    @JoinTable(name = "computer_storage",
+            joinColumns = @JoinColumn(name = "computer_id"),
+            inverseJoinColumns = @JoinColumn(name = "storage_id"))
+    private Set<Storage> storageSet;
 
     @ManyToOne
     @JoinColumn(name="system_id", nullable=false)
@@ -101,12 +105,12 @@ public class Computer {
         this.powerSupply = powerSupply;
     }
 
-    public Storage getStorage() {
-        return storage;
+    public Set<Storage> getStorageSet() {
+        return storageSet;
     }
 
-    public void setStorage(Storage storage) {
-        this.storage = storage;
+    public void setStorageSet(Set<Storage> storageSet) {
+        this.storageSet = storageSet;
     }
 
     public Opsystem getOpsystem() {
@@ -116,7 +120,6 @@ public class Computer {
     public void setOpsystem(Opsystem opsystem) {
         this.opsystem = opsystem;
     }
-
     public void setComputer(Computer computer) {
         this.setName(computer.getName());
         this.setMotherboard(computer.getMotherboard());
@@ -125,7 +128,7 @@ public class Computer {
         this.setProcessor(computer.getProcessor());
         this.setVideocard(computer.getVideocard());
         this.setPowerSupply(computer.getPowerSupply());
-        this.setStorage(computer.getStorage());
+        this.setStorageSet(computer.getStorageSet());
         this.setOpsystem(computer.getOpsystem());
     }
 }

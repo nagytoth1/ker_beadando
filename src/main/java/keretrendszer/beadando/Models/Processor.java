@@ -17,4 +17,44 @@ public class Processor {
     private byte cachemb;
     @Column(nullable = false, scale = 10, precision = 4, columnDefinition = "float default 3.20")
     private float clockrate;
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public byte getCores() {
+        return cores;
+    }
+
+    public void setCores(byte cores) {
+        this.cores = cores;
+    }
+
+    public byte getCachemb() {
+        return cachemb;
+    }
+
+    public void setCachemb(byte cachemb) {
+        this.cachemb = cachemb;
+    }
+
+    public float getClockrate() {
+        return clockrate;
+    }
+
+    public void setClockrate(float clockrate) {
+        this.clockrate = clockrate;
+    }
 }
