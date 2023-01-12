@@ -1,50 +1,56 @@
-<div layout:fragment="upload_card" class="col-lg-6 col-md-8 mx-auto">
-    <div class="card mb-3 pb-5">
-        <div class="card-header">
-            <h2 class="mb-3 ms-3 mt-2">Termék felvétele</h2>
-        </div>
-        <div class="card-body">
-            <form th:object="${computer}" th:action="@{/upload}" method="POST">
-                <!-- csrf-token volt itt-->
-                <div class="mb-3 ms-2">
-                    <label for="computer_name">Számítógép neve:</label>
-                    <input th:field="*{name}" type="text" class="form-control" id="computer_name" name="computer_name" value="Alma PC...">
-                </div>
-                <div class="mb-3 ms-2">
-                    <label for="motherboard">Alaplap:</label>
-                    <input th:field="*{motherboard}" type="text" class="form-control" id="motherboard" name="motherboard" value="...alaplap...">
-                </div>
-                <div class="mb-2 ms-2">
-                    <label for="ram">RAM:</label>
-                    <select th:field="*{ram}" class="form-control" id="ram" name="ram">
-                        <option value="">Kérlek, válassz a lehetőségek közül...</option>
-                        <option
-                                th:each="ram: ${rams}"
-                                th:value="${ram.id}"
-                                th:text="${ram.type} {ram.size} GB {ram.speed} MHz">
-                        </option>
-                    </select>
-                </div>
-                <div class="row gx-1 mt-0">
-                    <div class="col-3 p-3">
-                        <label for="quantity">RAM-ok száma:</label>
+<div th:fragment="upload_card" class="row">
+    <h1 class="text-center">Számítógép feltöltése</h1>
+    <div class="col-lg-6 col-md-8 mx-auto">
+        <div class="card mb-3 pb-5">
+            <div class="card-header">
+                <h2 class="mb-3 ms-3 mt-2">Termék felvétele</h2>
+            </div>
+            <div class="card-body">
+                <form th:object="${computer}" th:action="@{/upload}" method="POST">
+                    <!-- csrf-token volt itt-->
+                    <div class="mb-3 ms-2">
+                        <label for="computer_name">Számítógép neve:</label>
+                        <input th:field="*{name}" type="text" class="form-control" id="computer_name" name="computer_name" placeholder="A számítógép neve, például Alma PC">
                     </div>
-                    <div class="col-5 my-2">
-                        <input th:field="*{ram_quantity}" type="number" class="form-control px-2 py-2 border-2"
-                               id="quantity" name="quantity"
-                               min="0" max="8" step="2"
-                               value="2"/>
+                    <div class="mb-3 ms-2">
+                        <label for="motherboard">Alaplap:</label>
+                        <input th:field="*{motherboard}" type="text" class="form-control" id="motherboard" name="motherboard" placeholder="A számítógépben lévő alaplap neve, például ASUS Strix OK180">
                     </div>
-                </div>
-                <div class="mb-3 ms-2">
-                    <label for="processor">Processzor:</label>
-                    <select th:field="*{processor}" class="form-control" id="processor" name="processor">
-                        <option value="">Kérlek, válassz a lehetőségek közül...</option>
-                        <option th:each="proc: ${processors}"
-                                th:value="${proc.id}"
-                                th:text="${proc.name} {proc.cores} magos {proc.clockrate} GHz"></option>
-                    </select>
-                </div>
+                    <div class="mb-2 ms-2">
+                        <label for="ram">RAM:</label>
+                        <select th:field="*{ram}" class="form-control" id="ram" name="ram">
+                            <option value="">Kérlek, válassz a lehetőségek közül...</option>
+                            <option
+                                    th:each="ram: ${rams}"
+                                    th:value="${ram.id}"
+                                    th:text="${ram.name + ' ' + ram.type + ' ' + ram.size + ' GB ' + ram.speed} + ' MHz'">
+                            </option>
+                        </select>
+                    </div>
+                    <div class="row gx-1 mt-0">
+                        <div class="col-3 p-3">
+                            <label for="quantity">RAMok száma:</label>
+                        </div>
+                        <div class="col-5 my-2">
+                            <input th:field="*{ram_quantity}" type="number" class="form-control px-2 py-2 border-2"
+                                   id="quantity" name="quantity"
+                                   min="0" max="8" step="2"
+                                   value="2"/>
+                        </div>
+                    </div>
+                    <div class="mb-3 ms-2">
+                        <label for="processor">Processzor:</label>
+                        <select th:field="*{processor}" class="form-control" id="processor" name="processor">
+                            <option value="">Kérlek, válassz a lehetőségek közül...</option>
+                            <option th:each="proc: ${processors}"
+                                    th:value="${proc.id}"
+                                    th:text="${proc.name + ' ' + proc.cores + ' magos ' + proc.clockrate} + ' GHz'"></option>
+                        </select>
+                    </div>
+                    <div class="d-grid">
+                        <button class="btn btn-lg my-2 mx-auto px-5 border border-dark rounded-1" type="submit">Feltöltés</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
