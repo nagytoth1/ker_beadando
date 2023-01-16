@@ -4,20 +4,15 @@
 <head>
     <meta charset="UTF-8">
     <title>Főoldal</title>
-    <style>
-        .card{
-            background: #95c272;
-        }
-    </style>
 </head>
 <body>
    <div layout:fragment="content">
        <!-- termékek kilistázása - mindenki látja -->
-       <div class="row my-3 mx-3">
-               <div th:each="c : ${computers}" th:if="${c.bought == false or user != null and user.role.name == 'stacker'}" class="card col-md-6 col-lg-5 mx-auto col-sm-8 mx-3 my-2">
+       <div class="row mx-3">
+               <div th:each="c : ${computers}" th:if="${c.bought == false or user != null and user.role.name == 'stacker'}" class="card col-md-7 col-lg-5 mx-auto col-sm-9 m-2">
                    <div class="card-body">
                        <h5 th:text="${c.name}" class="card-title"></h5>
-                       <h6 th:text="${c.motherboard}" class="card-subtitle mb-2 text-muted"></h6>
+                       <h6 th:text="${c.motherboard}" class="card-subtitle mb-2 text-dark"></h6>
                        <label><b>Processzor:</b></label>
                        <p th:text="${c.processor.name}" class="card-text"></p>
                        <label><b>RAM:</b></label>
@@ -35,10 +30,8 @@
                        </div>
                        <label><b>Operációs rendszer:</b></label>
                        <p th:text="${c.opsystem.name}" class="card-text"></p>
-                       <a th:href="@{details/{id}(id=${c.id})}" class="card-link btn btn-primary p-2">További termékjellemzők</a>
-                       <div th:if="${user != null and user.role.id == 2}" class="text-center my-1 mx-2 d-inline">
-                           <a th:href="@{deletepc/{id}(id=${c.id})}" class="btn btn-danger py-1 px-2 ms-3 py-2" onclick="confirm('Biztosan szeretnéd törölni a számítógépet?')">Törlés</a></div>
-                       </div>
+                       <a th:href="@{details/{id}(id=${c.id})}" class="text-center card-link btn btn-success">További termékjellemzők</a>
+                       <a th:if="${user != null and user.role.name == 'stacker'}" th:href="@{deletepc/{id}(id=${c.id})}" class="btn btn-danger" onclick="confirm('Biztosan szeretnéd törölni a számítógépet?')">Törlés</a></div>
                    </div>
                </div>
            </div>

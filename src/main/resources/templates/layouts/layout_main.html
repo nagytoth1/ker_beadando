@@ -9,14 +9,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title th:text="${title}">Oldal címe</title>
     <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet" />
+    <link th:href="@{/css/formstyle.css}" rel="stylesheet" />
     <link th:href="@{/assets/comp_favicon.png}" rel="icon" type="image/x-icon">
     <script src="https://kit.fontawesome.com/3e5a359e4a.js" crossorigin="anonymous"></script>
     <script th:src="@{js/bootstrap.bundle.min.js}"></script>
-    <style>
-        body{
-            background: #689843;
-        }
-    </style>
 </head>
 <body>
     <nav th:replace="fragments/_navbar :: navbar"></nav>

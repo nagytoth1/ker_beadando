@@ -1,9 +1,8 @@
 <div th:fragment="upload_card" class="row">
-    <h1 class="text-center">Számítógép feltöltése</h1>
     <div class="col-lg-6 col-md-8 mx-auto">
-        <div class="card mb-3 pb-5">
+        <div class="card p-2 my-5">
             <div class="card-header">
-                <h2 class="mb-3 ms-3 mt-2">Termék felvétele</h2>
+                <h2 class="mb-3 ms-3 mt-2">Számítógép felvétele</h2>
             </div>
             <div class="card-body">
                 <form th:object="${computer}" th:action="@{/uploadpc}" method="POST">
@@ -28,7 +27,7 @@
                         </select>
                     </div>
                     <div class="row gx-1 mt-0">
-                        <div class="col-3 p-3">
+                        <div class="col-3 py-3 px-2">
                             <label for="quantity">RAMok száma:</label>
                         </div>
                         <div class="col-5 my-2">
@@ -74,7 +73,9 @@
                                     th:text="${psu.name}"></option>
                         </select>
                     </div>
-                    <input class="btn btn-lg my-2 mx-auto px-5 border border-dark rounded-1" type="submit" value="Feltöltés"/>
+                    <div class="text-center">
+                        <input class="btn btn-lg my-2 border border-dark rounded-1" type="submit" value="Feltöltés"/>
+                    </div>
                 </form>
             </div>
         </div>
