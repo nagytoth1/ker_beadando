@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.Optional;
 import java.util.Random;
@@ -33,21 +34,26 @@ public class UserController {
         m.addAttribute("user", new User());
         return "login";
     }
+    @GetMapping("/signout")
+    public String signout(RedirectAttributes attributes){
+        HomeController.setUserLoggedIn(null);
+        attributes.addAttribute("succMsg", "Sikeresen kijelentkeztél!");
+        return "redirect:/";
+    }
     @GetMapping("/register")
     public String showRegForm(Model m){
         m.addAttribute("user", new User());
         m.addAttribute("roles", roles.findAll());
-        if(HomeController.getUserLoggedIn() != null)
-            m.addAttribute("title", "Felhasználó felvétele");
-        else
-            m.addAttribute("title", "Regisztráció");
+        m.addAttribute("title",
+                HomeController.getUserLoggedIn() == null ? "Regisztráció" :
+                        "Felhasználó felvétele");
         return "register";
     }
 
-    @GetMapping("/forgotpassword")
+    @GetMapping("/forgot")
     public String showForgotPasswordForm(Model model){
         model.addAttribute("user", new User());
-        return "forgotpassword";
+        return "forgot_passwd";
     }
 
     @GetMapping("/users")
@@ -94,10 +100,9 @@ public class UserController {
         return "redirect:/";
     }
     @PostMapping("/register")
-    public String addUser(@ModelAttribute User user, Model m){
-        if(HomeController.getUserLoggedIn() != null &&
-            !HomeController.getUserLoggedIn().getRole().getName().equals("admin")){
-            m.addAttribute("failMsg", "Nincs jogod felhasználót hozzáadni a rendszerhez!");
+    public String addUser(@ModelAttribute User user, Model model, RedirectAttributes attributes){
+        if(HomeController.getUserLoggedIn() != null && !HomeController.getUserLoggedIn().getRole().getName().equals("admin")){
+            attributes.addAttribute("failMsg", "Nincs jogod felhasználót hozzáadni a rendszerhez!");
             return "redirect:/";
         }
         //if password is not valid, then return
@@ -106,21 +111,21 @@ public class UserController {
             User.getValidator().validatePassword(user.getPassword());
             User.getValidator().validateEmail(user.getEmail());
         } catch (AuthenticationException e) {
-            m.addAttribute("failMsg", e.getMessage());
-            return this.showRegForm(m);
+            attributes.addAttribute("failMsg", e.getMessage());
+            return "redirect:/register";
         }
         String encryptedPasswd = BCrypt.hashpw(
                 user.getPassword(),
                 BCrypt.gensalt(10)); //hash password via BCrypt
         //if user already exists with given email - must be unique
         if(users.findByEmail(user.getEmail()) != null){
-            m.addAttribute("failMsg", "Ezzel az e-mail címmel már regisztráltak felhasználót.");
-            return this.showRegForm(m);
+            attributes.addAttribute("failMsg", "Ezzel az e-mail címmel már regisztráltak felhasználót.");
+            return "redirect:/register";
         }
         //if user already exists with given username - must be unique
         if(users.findByUsername(user.getUsername()) != null){
-            m.addAttribute("failMsg", "Ezzel a felhasználónévvel már regisztráltak felhasználót.");
-            return this.showRegForm(m);
+            attributes.addAttribute("failMsg", "Ezzel a felhasználónévvel már regisztráltak felhasználót.");
+            return "redirect:/register";
         }
 
         User regUser = new User();
@@ -132,20 +137,20 @@ public class UserController {
         try{
             users.save(regUser);
         }catch(ConstraintViolationException exc){
-            m.addAttribute("failMsg", "Adott felhasználó már létezik.");
-            return this.showRegForm(m);
+            attributes.addAttribute("failMsg", "Adott felhasználó már létezik.");
+            return "redirect:/register";
         }
         catch(Exception e){
-            m.addAttribute("failMsg", e.getMessage());
-            return this.showRegForm(m);
+            attributes.addAttribute("failMsg", e.getMessage());
+            return "redirect:/register";
         }
         //ha admin adja hozzá
         if(HomeController.getUserLoggedIn() != null){
-            m.addAttribute("succMsg", String.format("Sikeresen hozzáadtad %s felhasználót!", regUser.getUsername()));
-            return this.showUsers(m);
+            model.addAttribute("succMsg", String.format("Sikeresen hozzáadtad %s felhasználót!", regUser.getUsername()));
+            return this.showUsers(model);
         }
-        m.addAttribute("succMsg", String.format("Sikeres regisztráció, %s. Kérlek, jelentkezz be a folytatáshoz!", regUser.getUsername()));
-        return this.showLoginForm(m);
+        model.addAttribute("succMsg", String.format("Sikeres regisztráció, %s. Kérlek, jelentkezz be a folytatáshoz!", regUser.getUsername()));
+        return this.showLoginForm(model);
     }
     private User validateLogin(String enteredValue, String enteredPlainPassword) throws AuthenticationException {
         //1. bemenetek validálása
@@ -193,11 +198,9 @@ public class UserController {
         //3 - send email to user - Warn user they should change password after first login
         users.save(foundUser);
         model.addAttribute("succMsg", "E-mail címedre elküldtük a jelszavad visszaállításhoz szükséges lépéseket!");
-        System.out.println("Sending mail....");
         sender.sendMail(foundUser.getEmail(),
                 "Forgot password",
                 String.format("Your new password: %06d\n Don't forget to change it!", number));
-        System.out.println("Mail sent!");
         return showForgotPasswordForm(model);
     }
 }

@@ -4,36 +4,40 @@
 <head>
     <meta charset="UTF-8">
     <title>Főoldal</title>
+    <style>
+        .card{
+            background: #95c272;
+        }
+    </style>
 </head>
 <body>
    <div layout:fragment="content">
        <!-- termékek kilistázása - mindenki látja -->
        <div class="row my-3 mx-3">
-               <div th:each="c : ${computers}" class="card col-md-6 col-lg-3 col-sm-8 mx-3 my-2">
+               <div th:each="c : ${computers}" th:if="${c.bought == false or user != null and user.role.name == 'stacker'}" class="card col-md-6 col-lg-5 mx-auto col-sm-8 mx-3 my-2">
                    <div class="card-body">
                        <h5 th:text="${c.name}" class="card-title"></h5>
-                       <h6 th:text="${c.motherboard}" class="card-subtitle mb-2 text-muted">Card subtitle</h6>
-                       <label>Processzor:</label>
+                       <h6 th:text="${c.motherboard}" class="card-subtitle mb-2 text-muted"></h6>
+                       <label><b>Processzor:</b></label>
                        <p th:text="${c.processor.name}" class="card-text"></p>
-                       <label>RAM:</label>
+                       <label><b>RAM:</b></label>
                        <p th:text="${c.ram.name}" class="card-text"></p>
-                       <label>Videokártya:</label>
+                       <label><b>Videokártya:</b></label>
                        <p th:text="${c.videocard.name}" class="card-text"></p>
-                       <label>Tápegység:</label>
+                       <label><b>Tápegység:</b></label>
                        <p th:text="${c.powerSupply.name}" class="card-text"></p>
-                       <label>Tárhely:</label>
+                       <p><b>Tárhely:</b></p>
                        <div th:each="storage:${c.storageSet}">
                            <p th:if="${storage.capacitygb > 1023}"
                               th:text="${storage.name + ' ' + storage.capacitygb / 1024f} + ' TB'"></p>
                            <p th:unless="${storage.capacitygb > 1023}"
                               th:text="${storage.name + ' ' + storage.capacitygb} + ' GB'"></p>
                        </div>
-                       <label>Operációs rendszer:</label>
+                       <label><b>Operációs rendszer:</b></label>
                        <p th:text="${c.opsystem.name}" class="card-text"></p>
-                       <a th:href="@{/pc/details/{id}(id=${c.id})}" class="card-link btn btn-primary py-1 px-2">További részletek...</a>
-                       <div th:if="${user != null and user.role.id == 2}" class="text-center my-1 mx-2">
-                           <a th:href="@{/modify/{id}(id=${c.id})}" class="card-link btn btn-dark py-1 px-2">Módosítás</a>
-                           <a th:href="@{/delete/{id}(id=${c.id})}" class="btn btn-danger py-1 px-2" onclick="confirm('Biztosan szeretnéd törölni a számítógépet?')">Törlés</a></div>
+                       <a th:href="@{details/{id}(id=${c.id})}" class="card-link btn btn-primary p-2">További termékjellemzők</a>
+                       <div th:if="${user != null and user.role.id == 2}" class="text-center my-1 mx-2 d-inline">
+                           <a th:href="@{deletepc/{id}(id=${c.id})}" class="btn btn-danger py-1 px-2 ms-3 py-2" onclick="confirm('Biztosan szeretnéd törölni a számítógépet?')">Törlés</a></div>
                        </div>
                    </div>
                </div>

@@ -6,7 +6,7 @@
                 <h2 class="mb-3 ms-3 mt-2">Termék felvétele</h2>
             </div>
             <div class="card-body">
-                <form th:object="${computer}" th:action="@{/upload}" method="POST">
+                <form th:object="${computer}" th:action="@{/uploadpc}" method="POST">
                     <!-- csrf-token volt itt-->
                     <div class="mb-3 ms-2">
                         <label for="computer_name">Számítógép neve:</label>
@@ -47,9 +47,34 @@
                                     th:text="${proc.name + ' ' + proc.cores + ' magos ' + proc.clockrate} + ' GHz'"></option>
                         </select>
                     </div>
-                    <div class="d-grid">
-                        <button class="btn btn-lg my-2 mx-auto px-5 border border-dark rounded-1" type="submit">Feltöltés</button>
+                    <div class="mb-3 ms-2">
+                        <label for="gpu">Videokártya:</label>
+                        <select th:field="*{videocard}" class="form-control" id="videocard" name="videocard">
+                            <option value="">Kérlek, válassz a lehetőségek közül...</option>
+                            <option th:each="vid: ${videocards}"
+                                    th:value="${vid.id}"
+                                    th:text="${vid.name + ' ' + vid.coolant + ' hűtéses ' + vid.clockrate} + ' GHz'"></option>
+                        </select>
                     </div>
+                    <div class="mb-3 ms-2">
+                        <label for="opsystem">Operációs rendszer:</label>
+                        <select th:field="*{opsystem}" class="form-control" id="opsystem" name="opsystem">
+                            <option value="">Kérlek, válassz a lehetőségek közül...</option>
+                            <option th:each="op: ${opsystems}"
+                                    th:value="${op.id}"
+                                    th:text="${op.name}"></option>
+                        </select>
+                    </div>
+                    <div class="mb-3 ms-2">
+                        <label for="psu">Tápegység:</label>
+                        <select th:field="*{powerSupply}" class="form-control" id="psu" name="psu">
+                            <option value="">Kérlek, válassz a lehetőségek közül...</option>
+                            <option th:each="psu: ${supplies}"
+                                    th:value="${psu.id}"
+                                    th:text="${psu.name}"></option>
+                        </select>
+                    </div>
+                    <input class="btn btn-lg my-2 mx-auto px-5 border border-dark rounded-1" type="submit" value="Feltöltés"/>
                 </form>
             </div>
         </div>

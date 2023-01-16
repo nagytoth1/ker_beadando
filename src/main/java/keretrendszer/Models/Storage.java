@@ -1,5 +1,8 @@
 package keretrendszer.Models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.Set;
 
@@ -22,6 +25,7 @@ public class Storage {
     @Column(nullable = false, columnDefinition = "smallint default 32")
     private short cachemb;
 
+    @JsonBackReference
     @ManyToMany(mappedBy = "storageSet", fetch = FetchType.EAGER)
     private Set<Computer> computerSet;
 
@@ -76,6 +80,7 @@ public class Storage {
         this.cachemb = cachemb;
     }
 
+    @JsonIgnore
     public Set<Computer> getComputerSet() {
         return computerSet;
     }

@@ -27,7 +27,7 @@ INSERT INTO `cpus` (name, cores, cachemb, clockrate) VALUES
 ('Intel Core i9-12900K',16,16,3.20);
 UNLOCK TABLES;
 
--- seed psus table
+-- seed supplies table
 LOCK TABLES `psus` WRITE;
 INSERT INTO `psus` (type, performance, name) VALUES
 ('félmoduláris',400,'Akyga Basic AK-B1-400 OEM'),

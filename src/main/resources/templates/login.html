@@ -12,7 +12,7 @@
       <img th:src="@{/assets/comp_favicon.png}"> <!-- login image -->
     </div>
     <div class="text-center name mt-3">
-        <a th:href="@{/login}" class="text-decoration-none display-2" style="font-size:1.5em;">Bejelentkezés</a>
+        <a th:href="@{/login}" class="text-decoration-none display-2 fw-bold" style="font-size:1.5em;">Bejelentkezés</a>
     </div>
     <form class="p-3 mt-3" method="POST" th:object="${user}" action="login">
       <!-- alert-es rész, itt jönnek a különböző hibás és sikeres műveletekről szóló üzenetek, minden oldalnak tudnia kell -->
@@ -27,8 +27,8 @@
       <button class="btn mt-3">Bejelentkezés</button>
     </form>
     <div class="text-center fs-6">
-      <a th:href="@{forgotpassword}">Elfelejtetted a jelszavadat?</a><br>
-      Nincs még fiókod? <a th:href="@{register}">Regisztrálok</a>
+      <a th:href="@{/forgot}">Elfelejtetted a jelszavadat?</a><br>
+      Nincs még fiókod? <a th:href="@{/register}">Regisztrálok</a>
     </div>
   </div>
 </body>

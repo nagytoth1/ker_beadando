@@ -44,18 +44,24 @@ public class Computer {
     @ManyToOne
     @JoinColumn(name="system_id", nullable=false)
     private Opsystem opsystem;
+
+    @Column(name = "bought", nullable = false, columnDefinition = "boolean default false")
+    private boolean bought;
     public void setComputer(Computer computer) {
-        this.setName(computer.getName());
-        this.setMotherboard(computer.getMotherboard());
-        this.setRam(computer.getRam());
-        this.setRam_quantity(computer.getRam_quantity());
-        this.setProcessor(computer.getProcessor());
-        this.setVideocard(computer.getVideocard());
-        this.setPowerSupply(computer.getPowerSupply());
-        this.setStorageSet(computer.getStorageSet());
-        this.setOpsystem(computer.getOpsystem());
+        this.setName(computer.name);
+        this.setMotherboard(computer.motherboard);
+        this.setRam(computer.ram);
+        this.setRam_quantity(computer.ram_quantity);
+        this.setProcessor(computer.processor);
+        this.setVideocard(computer.videocard);
+        this.setPowerSupply(computer.powerSupply);
+        this.setStorageSet(computer.storageSet);
+        this.setOpsystem(computer.opsystem);
+        this.setBought(computer.bought);
     }
 
+    public boolean isBought() { return bought;}
+    public void setBought(boolean bought) { this.bought = bought; }
     public long getId() {
         return id;
     }

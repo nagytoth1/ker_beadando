@@ -4,20 +4,114 @@
 <head>
       <meta charset="UTF-8">
       <title>Számítógép részletei</title>
+  <style>
+    table, td, th {
+      border: 2px solid black;
+    }
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+    }
+
+    td {
+      height: 50px;
+      vertical-align: top;
+      text-align: center;
+    }
+  </style>
 </head>
 <body>
 <div class="row my-5" layout:fragment="content">
   <div class="col-lg-6 col-md-8 mx-auto">
     <div class="card mb-3 pb-5">
       <div class="card-header">
-        <h5 class="card-title" th:text="${computer.name}"></h5>
-        <p class="card-text text-secondary" th:text="${computer.motherboard}">Alaplap</p>
+        <h5 class="card-title mb-2" th:text="${computer.name}"></h5>
+        <p class="card-text text-muted mb-2" th:text="'Alaplap: '+${computer.motherboard}">Alaplap</p>
       </div>
       <div class="card-body">
+        <table>
+          <tbody>
+            <tr>
+              <td class="fw-bold">Processzor</td>
+              <td class="fw-bold">RAM</td>
+              <td class="fw-bold">Tárhely</td>
+            </tr>
+            <tr>
+              <td>
+                <dl>
+                  <dt>Neve:</dt>
+                  <dd th:text="${computer.processor.name}" class="card-text"></dd>
+                  <dt>Órajel:</dt>
+                  <dd th:text="${computer.processor.clockrate} + ' GHz'" class="card-text"></dd>
+                  <dt>Magok száma:</dt>
+                  <dd th:text="${computer.processor.cores}" class="card-text"></dd>
+                  <dt>Cache mérete:</dt>
+                  <dd th:text="${computer.processor.cachemb} + ' MB'" class="card-text"></dd>
+                </dl>
+              </td>
+              <td>
+                <dl>
+                  <dt>Neve:</dt>
+                  <dd th:text="${computer.ram.name}" class="card-text"></dd>
+                  <dt>Típusa:</dt>
+                  <dd th:text="${computer.ram.type}" class="card-text"></dd>
+                  <dt>Órajele:</dt>
+                  <dd th:text="${computer.ram.speed}+' MHz'" class="card-text"></dd>
+                  <dt>Mérete:</dt>
+                  <dd th:text="${computer.ram.size}+' GB'" class="card-text"></dd>
+                </dl>
+              </td>
+              <td>
+                <dl th:each="storage:${computer.storageSet}" class="ms-3">
+                  <dt>Méret:</dt>
+                  <dd th:if="${storage.capacitygb > 1023}"
+                      th:text="${storage.name + ' ' + storage.capacitygb / 1024f} + ' TB'"></dd>
+                  <dd th:unless="${storage.capacitygb > 1023}"
+                      th:text="${storage.name + ' ' + storage.capacitygb} + ' GB'"></dd>
+                  <dt>Port:</dt>
+                  <dd th:text="${storage.port}" class="card-text"></dd>
+                  <dt>Meghajtó típusa: </dt>
+                  <dd th:unless="${storage.rpm == 0}"
+                      th:text="'HDD ('+${storage.rpm}+' RPM)'" class="card-text"></dd>
+                  <dd th:if="${storage.rpm == 0}" class="card-text">SSD</dd>
+                </dl>
+              </td>
+            </tr>
+            <tr>
+              <td class="fw-bold">Tápegység</td>
+              <td class="fw-bold">Videokártya:</td>
+              <td class="fw-bold" th:text="'Operációs rendszer: '+${computer.opsystem.name}"></td>
+            </tr>
+            <tr>
+              <td>
+                <dl>
+                  <dt>Neve:</dt>
+                  <dd th:text="${computer.powerSupply.name}"></dd>
+                  <dt>Típusa:</dt>
+                  <dd th:text="${computer.powerSupply.type}"></dd>
+                  <dt>Teljesítménye:</dt>
+                  <dd th:text="${computer.powerSupply.performance}+' Watt'"></dd>
+                </dl>
+              </td>
+              <td>
+                <dl>
+                  <dt>Neve:</dt>
+                  <dd th:text="${computer.videocard.name}"></dd>
+                  <dt>Órajele:</dt>
+                  <dd th:text="${computer.videocard.clockrate}+' GHz'"></dd>
+                  <dt>Hűtése:</dt>
+                  <dd th:text="${computer.videocard.coolant}"></dd>
+                </dl>
+              </td>
+            </tr>
+          </tbody>
+        </table>
         <div class="text-center">
-          <a href="#" class="btn btn-danger p-2">Megveszem</a>
+          <a th:href="@{/buypc/{id}(id=${computer.id})}" class="btn btn-success btn-lg">Megveszem</a>
         </div>
       </div>
+    </div>
     </div>
   </div>
 </div>

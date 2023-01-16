@@ -47,7 +47,7 @@
       <p>Van már fiókod? <a th:href="@{/login}">Jelentkezz be!</a></p>
     </div>
     <div class="d-flex align-items-center" th:unless="${user == null}">
-      <a class="text-center mx-auto" href="/">Vissza</a>
+      <a class="text-center mx-auto" th:href="@{/login}">Vissza</a>
     </div>
     <button class="btn mt-3" th:text="${title}">Regisztráció</button>
   </form>
