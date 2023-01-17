@@ -18,8 +18,8 @@
     <nav th:replace="fragments/_navbar :: navbar"></nav>
     <main>
         <!-- alert-es rész, itt jönnek a különböző hibás és sikeres műveletekről szóló üzenetek, minden oldalnak tudnia kell -->
-        <h5 th:text="${succMsg}" class="text-success text-center mt-3"></h5>
-        <h5 th:text="${failMsg}" class="text-danger text-center mt-3"></h5>
+        <h5 th:if="${succMsg != null && succMsg != ''}" th:text="${succMsg}" class="alert alert-success text-center mt-3"></h5>
+        <h5 th:if="${failMsg != null && failMsg != ''}" th:text="${failMsg}" class="alert alert-danger text-center mt-3"></h5>
         <div layout:fragment="content"></div> <!-- ez a változó content rész, ezt töltsék ki az oldalak -->
     </main>
 </body>

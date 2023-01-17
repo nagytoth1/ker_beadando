@@ -1,29 +1,33 @@
 <!-- th meg ezeket megkapja -->
-<nav th:fragment="navbar" class="navbar navbar-expand-lg navbar-dark bg-dark">
-     <div class="navbar-brand">
-         <img class="mx-2" th:src="@{/assets/pc.svg}" alt="Számítógép" width="40" height="40"
+<nav th:fragment="navbar" class="navbar navbar-expand-sm bg-dark">
+    <div class="container-fluid">
+        <div class="navbar-header">
+         <img class="mx-2 my-1" th:src="@{/assets/pc.svg}" alt="Számítógép" width="50" height="50"
               fill="none" stroke="currentColor" stroke-linecap="round"
               stroke-linejoin="round" stroke-width="2" aria-hidden="true"
               style="float:left;"/>
-         <a class="text-light text-decoration-none my-1" href="/" style="float:left;">
+         <a class="text-light text-decoration-none mt-3" href="/" style="float:left;">
              <h4 style="color: #fff8e5;">Számítógépes Webáruház</h4>
          </a>
-     </div>
-    <ul class="nav navbar-right mx-3" th:if="${user==null}">
-        <li><a th:href="@{'/login'}" class="btn btn-warning mx-3 font-weight-bold text-lg-left">Bejelentkezés</a></li>
-        <li><a th:href="@{'/register'}" class="btn btn-warning mx-3 font-weight-bold text-lg-left">Regisztráció</a></li>
-    </ul>
-     <ul class="nav navbar-nav mx-3" th:unless="${user==null}">
-         <!-- Stacker-funkciók: termék felvétele és törlése -->
-         <li th:if="${user.role.name == 'stacker'}">
-             <a th:href="@{/uploadpc}" class="btn btn-warning mx-3">Termék felvétele</a></li>
-         <!-- Admin-funkciók: Felhasználó felvétele (lényegében regisztráció) -->
-         <li th:if="${user.role.name == 'admin'}">
-             <a th:href="@{/users}" class="btn btn-warning mx-2"><i class="fa fa-user mx-2" aria-hidden="true"></i>Felhasználók</a></li>
-         <li th:if="${user.role.name == 'admin'}">
-             <a th:href="@{/register}" class="btn btn-warning mx-2"> <i class="fa fa-user-plus mx-2" aria-hidden="true"></i>Felhasználó felvétele</a></li>
-         <!-- Alap felhasználói funkciók: profilbeállítások, kijelentkezés -->
-         <li><a th:href="@{/profile/}" class="btn btn-success mx-3"><i class="fa fa-user-md mx-2" aria-hidden="true"></i>Profilbeállítások</a></li>
-         <li><a th:href="@{/signout}" class="btn btn-danger mx-3"><i class="fa fa-sign-out mx-2" aria-hidden="true"></i>Kijelentkezés</a></li>
-     </ul>
+        </div>
+        <div class="collapse navbar-collapse justify-content-end">
+            <ul class="navbar-nav" th:if="${user == null}">
+                <li><a th:href="@{'/login'}" class="btn btn-warning ms-2 font-weight-bold text-lg-left"><i class="fa fa-sign-in me-2"></i>Bejelentkezés</a></li>
+                <li><a th:href="@{'/register'}" class="btn btn-warning ms-2 font-weight-bold text-lg-left"><i class="fa fa-user-plus me-2"></i>Regisztráció</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right" th:unless="${user==null}">
+                 <!-- Stacker-funkciók: termék felvétele és törlése -->
+                 <li th:if="${user.role.name == 'stacker'}">
+                     <a th:href="@{/uploadpc}" class="btn btn-warning ms-2"><i class="fa-sharp fa-solid fa-square-plus me-2"></i>Termék felvétele</a></li>
+                 <!-- Admin-funkciók: Felhasználó felvétele (lényegében regisztráció) -->
+                 <li th:if="${user.role.name == 'admin'}">
+                     <a th:href="@{/users}" class="btn btn-warning ms-2"><i class="fa fa-user mx-2" aria-hidden="true"></i>Felhasználók</a></li>
+                 <li th:if="${user.role.name == 'admin'}">
+                     <a th:href="@{/register}" class="btn btn-warning ms-2"> <i class="fa fa-user-plus mx-2" aria-hidden="true"></i>Felhasználó felvétele</a></li>
+                 <!-- Alap felhasználói funkciók: profilbeállítások, kijelentkezés -->
+                 <li><a th:href="@{/profile/}" class="btn btn-success ms-2"><i class="fa fa-user-md mx-2" aria-hidden="true"></i>Profilbeállítások</a></li>
+                 <li><a th:href="@{/signout}" class="btn btn-danger ms-2"><i class="fa fa-sign-out mx-2" aria-hidden="true"></i>Kijelentkezés</a></li>
+             </ul>
+        </div>
+    </div>
 </nav>

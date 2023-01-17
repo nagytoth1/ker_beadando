@@ -3,7 +3,7 @@ package keretrendszer.Controllers;
 import keretrendszer.Models.User;
 import keretrendszer.Repositories.RolesRepo;
 import keretrendszer.Repositories.UserRepo;
-import keretrendszer.Services.EmailSender;
+import keretrendszer.Services.EmailSenderService;
 import org.apache.tomcat.websocket.AuthenticationException;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -85,18 +85,19 @@ public class UserController {
 
     //----POST-methods-------
     @PostMapping("/login")
-    public String loginUser(@ModelAttribute User user, Model m){
+    public String loginUser(@ModelAttribute User user, Model model, RedirectAttributes attributes){
         try{
             User foundUser = validateLogin(user.getUsername(), user.getPassword());
             //3 - ha a felhasználó létezik, akkor hajtsuk végre a bejelentkezést
             HomeController.setUserLoggedIn(foundUser);
         }
         catch(AuthenticationException auth){
-            m.addAttribute("title", "Hiba bejelentkezéskor");
-            m.addAttribute("user", new User());
-            m.addAttribute("failMsg", auth.getMessage());
-            return showLoginForm(m);
+            model.addAttribute("title", "Hiba bejelentkezéskor");
+            model.addAttribute("user", new User());
+            model.addAttribute("failMsg", auth.getMessage());
+            return showLoginForm(model);
         }
+        attributes.addAttribute("succMsg", "Sikeresen bejelentkeztél!");
         return "redirect:/";
     }
     @PostMapping("/register")
@@ -172,7 +173,7 @@ public class UserController {
         return foundUser;
     }
     @Autowired
-    private EmailSender sender;
+    private EmailSenderService sender;
     @PostMapping("/send")
     public String sendMail(@ModelAttribute User user, Model model) {
         String enteredEmail = user.getEmail();

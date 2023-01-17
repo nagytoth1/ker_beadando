@@ -18,7 +18,7 @@
       <!-- alert-es rész, itt jönnek a különböző hibás és sikeres műveletekről szóló üzenetek, minden oldalnak tudnia kell -->
       <h5 th:text="${succMsg}" class="text-success text-center"></h5>
       <h5 th:text="${failMsg}" class="text-danger text-center"></h5>
-      <label for="username" class="ms-2">Felhasználóneved:</label>
+      <label for="username" class="ms-2">Felhasználóneved vagy e-mail címed:</label>
       <div class="form-field d-flex align-items-center text-center">
         <input type="text" name="username" id="username" placeholder="kiskutyus73" th:field="*{username}" class="text-center" maxlength="100" minlength="4" min="4" max="100">
       </div>
@@ -29,8 +29,8 @@
       <button class="btn btn-primary mt-3 text-dark">Bejelentkezés</button>
     </form>
     <div class="text-center fs-6">
-      <a th:href="@{/forgot}">Elfelejtetted a jelszavadat?</a><br>
-      Nincs még fiókod? <a th:href="@{/register}">Regisztrálok</a>
+      <a th:href="@{/forgot}" class="fw-bold text-black-50">Elfelejtetted a jelszavadat?</a><br>
+      <p class="fw-bold">Nincs még fiókod? <a th:href="@{/register}" class="text-black-50">Regisztrálok</a></p>
     </div>
   </div>
 </body>

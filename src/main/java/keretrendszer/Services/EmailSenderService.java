@@ -8,22 +8,17 @@ import org.springframework.stereotype.Service;
 import java.util.Date;
 
 @Service
-public class EmailSender {
+public class EmailSenderService {
     @Autowired
     private JavaMailSender sender;
 
-    private final String FROM_ADDRESS = "zajcevwebaruhaz@test.com";
-    public void sendMail(String toEmail,
-                         String subject,
-                         String body){
-        SimpleMailMessage msg = new SimpleMailMessage();
-        msg.setFrom(FROM_ADDRESS);
+    public void sendMail(String toEmail, String subject, String body){
+        final SimpleMailMessage msg = new SimpleMailMessage();
         msg.setTo(toEmail);
         msg.setText(body);
         msg.setSubject(subject);
         msg.setSentDate(new Date());
 
         sender.send(msg);
-        System.out.println("Mail has been sent successfully...");
     }
 }
